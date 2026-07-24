@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Text, Select, createListCollection } from "@chakra-ui/react"
+import { Box, Flex, Text, Select, createListCollection, Spinner } from "@chakra-ui/react"
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { supabase } from "@/utils/supabase/client";
@@ -148,6 +148,22 @@ export default function Dashboard() {
       },
     ],
   };
+
+  if (isLoading) {
+  return (
+    <Flex justify="center" py={20}>
+      <Spinner size="lg" />
+    </Flex>
+  );
+}
+
+if (error) {
+  return (
+    <Box p={8}>
+      <Text color="red.500">Hata: {error.message}</Text>
+    </Box>
+  );
+}
 
   return (
     <Box>
