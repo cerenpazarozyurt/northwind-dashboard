@@ -3,9 +3,15 @@
 import { Box, Flex, Text, Select, createListCollection, Spinner } from "@chakra-ui/react"
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { supabase } from "@/utils/supabase/client";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { 
+  calculateTotalRevenue, 
+  calculateTotalCustomers, 
+  calculateTotalProducts, 
+  calculateMonthlyRevenue, 
+  calculatePieData 
+} from "../../helpers/dashboardHelpers";
 
 const years = createListCollection({
   items: [
@@ -16,113 +22,17 @@ const years = createListCollection({
   ],
 });
 
-const fetchDashboardData = async (year: string) => {
-  let query = supabase
-    .from("orders")
-    .select(`
-      order_date,
-      ship_country,
-      customer_id,
-      order_details (
-        product_id,
-        unit_price,
-        quantity,
-        discount
-      )
-    `);
-
-  if (year !== "all") {
-    query = query
-      .gte("order_date", `${year}-01-01`)
-      .lte("order_date", `${year}-12-31`);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-};
-
 export default function Dashboard() {
   const [selectedYear, setSelectedYear] = useState("all");
 
-  const { data: rawData, isLoading, error } = useQuery({
-    queryKey: ["dashboardData", selectedYear],
-    queryFn: () => fetchDashboardData(selectedYear),
-  });
+  const { data: rawData, isLoading, error } = useDashboardData(selectedYear);
 
-  // Toplam Ciro Hesaplama
   const totalOrders = rawData?.length || 0;
-
-  const totalRevenue = rawData?.reduce((acc, order) => { //reduce, tüm elemanları gezer tek bir değer çıkarır.
-
-    const orderTotal = order.order_details?.reduce((sum, item) => {  
-      const price = item.unit_price || 0;
-      const qty = item.quantity || 0;
-      const discount = item.discount || 0;
-      return sum + price * qty * (1 - discount);
-    }, 0) || 0;
-
-    return acc + orderTotal;
-  }, 0) || 0;
-
-  //Toplam Müşteri Sayısı
-  const uniqueCustomers = new Set();
-  rawData?.forEach((order) => {
-    if (order.customer_id) {
-      uniqueCustomers.add(order.customer_id);
-    }
-  });
-  const totalCustomers = uniqueCustomers.size; 
-
-  //Aktif Ürün Sayısı
-  const uniqueProducts = new Set();
-  rawData?.forEach((order) => {
-    order.order_details?.forEach((item) => {
-      if (item.product_id) {
-        uniqueProducts.add(item.product_id);
-      }
-    });
-  });
-  const totalProducts = uniqueProducts.size;
-
-  // 12 ayın ciro toplamını 0 olarak ayarla
-  const monthlyRevenue = Array(12).fill(0); 
-
-  rawData?.forEach((order) => {
-    const monthIndex = new Date(order.order_date).getMonth();
-
-    const orderTotal = order.order_details?.reduce((sum, item) => {
-      const price = item.unit_price || 0;
-      const qty = item.quantity || 0;
-      const discount = item.discount || 0;
-      return sum + price * qty * (1 - discount);
-    }, 0) || 0;
-
-    monthlyRevenue[monthIndex] += orderTotal;
-  });
-
-  //pie chart
-  const countrySales: Record<string, number> = {};
-
-  rawData?.forEach((order) => {
-    const country = order.ship_country;
-    if (country) {
-      countrySales[country] = (countrySales[country] || 0) + 1;
-    }
-  });
-
-  const pieData = Object.entries(countrySales)
-    .map(([countryName, count]) => ({
-      name: countryName,
-      y: count as number,
-    }))
-    .sort((a, b) => b.y - a.y)
-    .slice(0, 5);
-
+  const totalRevenue = calculateTotalRevenue(rawData);
+  const totalCustomers = calculateTotalCustomers(rawData);
+  const totalProducts = calculateTotalProducts(rawData);
+  const monthlyRevenue = calculateMonthlyRevenue(rawData);
+  const pieData = calculatePieData(rawData);
 
   const chartOptions = {
     title: { text: "Aylık Ciro" },
