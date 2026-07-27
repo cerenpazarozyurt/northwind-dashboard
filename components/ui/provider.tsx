@@ -7,11 +7,13 @@ import {
 } from "./color-mode"
 import { Toaster } from "./toaster"
 
-export function Provider(props: ColorModeProviderProps) {
+export function Provider({ children, ...rest }: ColorModeProviderProps) {
   return (
     <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider {...props} />
-      <Toaster />
+      <ColorModeProvider {...rest}>
+        {children}
+        <Toaster />
+      </ColorModeProvider>
     </ChakraProvider>
   )
 }

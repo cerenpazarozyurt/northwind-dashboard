@@ -1,38 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/client";
-import { Box, Button, Input, VStack, Text, Flex, createToaster} from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-const toaster = createToaster({
-  placement: "top-end",
-  duration: 4000,
-});
+import { Box, Button, Input, VStack, Text, Flex } from "@chakra-ui/react";
+import { supabase } from "@/utils/supabase/client";
+import { toaster } from "@/components/ui/toaster";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
     const cleanEmail = email.trim();
 
     try {
-      const response = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
         password,
       });
 
-      if (response.error) {
+      if (error) {
         toaster.create({
           title: "Giriş Başarısız",
-          description: response.error.message || "E-posta veya şifre hatalı!",
+          description: error.message || "E-posta veya şifre hatalı!",
           type: "error",
         });
         setIsLoading(false);
@@ -45,14 +39,15 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         type: "success",
       });
 
-      setIsLoading(false);
-      
       setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 300);
-
-    } catch (err) {
-      console.error("Giriş sırasında beklenmeyen hata:", err);
+        window.location.assign("/dashboard");
+      }, 800);
+    } catch {
+      toaster.create({
+        title: "Giriş Başarısız",
+        description: "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+        type: "error",
+      });
       setIsLoading(false);
     }
   };

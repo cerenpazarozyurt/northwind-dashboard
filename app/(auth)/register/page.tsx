@@ -57,7 +57,16 @@ export default function RegisterPage() {
       }
 
       await supabase.auth.signOut();
-      window.location.assign("/login");
+
+      toaster.create({
+        title: "Kayıt Başarılı!",
+        description: "Giriş sayfasına yönlendiriliyorsunuz.",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        window.location.assign("/login");
+      }, 800);
     } catch {
       toaster.create({
         title: "Kayıt Başarısız",

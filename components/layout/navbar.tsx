@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Flex, Text, HStack, Box, Button, Menu } from "@chakra-ui/react";
 import { User, LogOut } from "lucide-react";
 import { supabase } from "@/utils/supabase/client";
+import { toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -37,7 +38,16 @@ export function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/login");
+
+    toaster.create({
+      title: "Çıkış yapıldı",
+      description: "Giriş sayfasına yönlendiriliyorsunuz.",
+      type: "success",
+    });
+
+    setTimeout(() => {
+      router.push("/login");
+    }, 800);
   };
 
   // Sunucu (SSR) tarafında tarayıcıya inene kadar render etme
