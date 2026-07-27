@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { QueryProvider } from "@/components/query-provider";
 import ClientLayout from "./clientLayout";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="tr" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
         <Provider>
-          <QueryProvider>
-            <ClientLayout>{children}</ClientLayout>
-          </QueryProvider>
+          <NuqsAdapter>
+            <QueryProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </QueryProvider>
+          </NuqsAdapter>
         </Provider>
       </body>
     </html>
