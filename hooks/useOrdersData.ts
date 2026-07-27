@@ -18,7 +18,7 @@ export type Order = {
   ship_country: string;
 };
 
-const PAGE_SIZE = 10;
+export const PAGE_SIZE = 10;
 
 async function fetchOrders(country: string, search: string, page: number) {
   const from = (page - 1) * PAGE_SIZE;

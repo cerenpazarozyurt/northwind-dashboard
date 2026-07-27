@@ -1,77 +1,22 @@
 "use client"; 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Badge, Table, Box, Flex, Pagination, ButtonGroup, IconButton, Input, InputGroup, Select, createListCollection, Spinner } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
 
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
-import { useOrdersData, Order } from "@/hooks/useOrdersData";
+import { useOrdersData, PAGE_SIZE } from "@/hooks/useOrdersData";
+import { useOrderFilters } from "@/hooks/useOrderFilters";
+import { columns } from "@/helpers/orderColumns";
 
-const columnHelper = createColumnHelper<Order>() //Order tipine özel bir Sütun Oluşturucu
-
-const columns = [
-  columnHelper.accessor("order_id", { header: "Sipariş ID", cell: (info) => info.getValue() }),
-  columnHelper.accessor("customer_id", { header: "Müşteri", cell: (info) => info.getValue() }),
-  columnHelper.accessor("order_date", { header: "Tarih", cell: (info) => info.getValue() }),
-  columnHelper.accessor("ship_country", { header: "Ülke", cell: (info) => info.getValue() }),
-  columnHelper.accessor("freight", { header: "Kargo Ücreti", cell: (info) => `$${info.getValue().toFixed(2)}` }),
-  columnHelper.accessor("shipped_date", {
-    header: "Sipariş Durumu",
-    cell: (info) => {
-      const shippedDate = info.getValue();
-      return (
-        <Badge colorPalette={shippedDate ? "green" : "yellow"}>
-          {shippedDate ? "Kargolandı" : "Beklemede"}
-        </Badge>
-      );
-    },
-  }),
-]
-
-const PAGE_SIZE = 10;
 const ALL_VALUE = "__all__";
 
 export default function OrdersPage() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const country = searchParams.get("country") ?? "";
-  const search = searchParams.get("search") ?? "";
-  const page = Number(searchParams.get("page") ?? "1");
-
-  const [searchInput, setSearchInput] = useState(search); //useState olmasaydı eğer inputta her yazdığımız harf sonrası arama yapılırdı. 
-
-  //filtreleme çalışınca url güncelleme
-  function updateParams(updates: Record<string, string>) {
-    const params = new URLSearchParams(searchParams.toString());
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
-    router.push(`${pathname}?${params.toString()}`);
-  }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (searchInput !== search) {
-        updateParams({ search: searchInput, page: "1" });
-      }
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [searchInput]);
-
+  const { country, search, page, searchInput, setSearchInput, updateParams } = useOrderFilters();
   const { ordersResult, isLoading, countryList } = useOrdersData(country, search, page);
 
   const countries = createListCollection({

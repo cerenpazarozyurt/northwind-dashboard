@@ -3,9 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { QueryProvider } from "@/components/query-provider";
-import { Sidebar } from "@/components/layout/sidebar";
-import { Navbar } from "@/components/layout/navbar";
-import { Box } from "@chakra-ui/react";
+import ClientLayout from "./clientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,25 +22,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col">
-        <QueryProvider>
-          <Provider>
-            <Sidebar />
-            <Navbar />
-            <Box as="main" ml="240px" mt="60px" p={6}>
-              {children}
-            </Box>
-          </Provider>
-        </QueryProvider>
+    <html lang="tr" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
+        <Provider>
+          <QueryProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </QueryProvider>
+        </Provider>
       </body>
     </html>
   );
