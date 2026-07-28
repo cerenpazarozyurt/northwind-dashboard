@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Box, Button, Input, VStack, HStack, Text, Flex } from "@chakra-ui/react";
 import { supabase } from "@/utils/supabase/client";
 import { toaster } from "@/components/ui/toaster";
+import { RegisterSchema, RegisterFormValues } from "@/helpers/authSchemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputStyles = {
   size: "md" as const,
@@ -14,20 +17,16 @@ const inputStyles = {
 };
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const { register, handleSubmit, formState: { errors }, } = useForm<RegisterFormValues>({ resolver: zodResolver(RegisterSchema) });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleRegister = async (data: RegisterFormValues) => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
       });
 
       if (error) {
@@ -39,11 +38,11 @@ export default function RegisterPage() {
         return;
       }
 
-      if (data.user) {
+      if (authData.user) {
         const { error: profileError } = await supabase.from("profiles").insert({
-          id: data.user.id,
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
+          id: authData.user.id,
+          first_name: data.firstName,
+          last_name: data.lastName,
         });
 
         if (profileError) {
@@ -91,7 +90,7 @@ export default function RegisterPage() {
             </Text>
           </Box>
 
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleSubmit(handleRegister)}>
             <VStack gap={4} align="stretch">
               <HStack w="full" gap={4}>
                 <Box flex="1">
@@ -100,11 +99,14 @@ export default function RegisterPage() {
                   </Text>
                   <Input
                     placeholder="Örn: Ayşe"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
+                    {...register("firstName")}
                     {...inputStyles}
                   />
+                  {errors.firstName && (
+                    <Text fontSize="xs" color="red.500" mt={1}>
+                      {errors.firstName.message}
+                    </Text>
+                  )}
                 </Box>
                 <Box flex="1">
                   <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1.5}>
@@ -112,11 +114,14 @@ export default function RegisterPage() {
                   </Text>
                   <Input
                     placeholder="Örn: Yılmaz"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
+                    {...register("lastName")}
                     {...inputStyles}
                   />
+                  {errors.lastName && (
+                    <Text fontSize="xs" color="red.500" mt={1}>
+                      {errors.lastName.message}
+                    </Text>
+                  )}
                 </Box>
               </HStack>
 
@@ -127,11 +132,14 @@ export default function RegisterPage() {
                 <Input
                   type="email"
                   placeholder="ornek@sirket.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email")}
                   {...inputStyles}
                 />
+                {errors.email && (
+                  <Text fontSize="xs" color="red.500" mt={1}>
+                    {errors.email.message}
+                  </Text>
+                )}
               </Box>
 
               <Box>
@@ -141,12 +149,14 @@ export default function RegisterPage() {
                 <Input
                   type="password"
                   placeholder="En az 6 karakter"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
+                  {...register("password")}
                   {...inputStyles}
                 />
+                {errors.password && (
+                  <Text fontSize="xs" color="red.500" mt={1}>
+                    {errors.password.message}
+                  </Text>
+                )}
               </Box>
 
               <Button

@@ -5,22 +5,22 @@ import Link from "next/link";
 import { Box, Button, Input, VStack, Text, Flex } from "@chakra-ui/react";
 import { supabase } from "@/utils/supabase/client";
 import { toaster } from "@/components/ui/toaster";
+import { LoginSchema, LoginFormValues } from "@/helpers/authSchemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit, formState: { errors }, } = useForm<LoginFormValues>({ resolver: zodResolver(LoginSchema) });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
-
-    const cleanEmail = email.trim();
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password,
+        email: data.email,
+        password: data.password,
       });
 
       if (error) {
@@ -65,7 +65,7 @@ export default function LoginPage() {
             </Text>
           </Box>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <VStack gap={4} align="stretch">
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1.5}>
@@ -74,14 +74,17 @@ export default function LoginPage() {
                 <Input
                   type="email"
                   placeholder="ornek@sirket.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email")}
                   size="md"
                   borderColor="gray.200"
                   color="gray.800"
                   _focus={{ borderColor: "#3B82F6", boxShadow: "0 0 0 1px #3B82F6" }}
                 />
+                {errors.email && (
+                  <Text fontSize="xs" color="red.500" mt={1}>
+                    {errors.email.message}
+                  </Text>
+                )}
               </Box>
 
               <Box>
@@ -96,14 +99,17 @@ export default function LoginPage() {
                 <Input
                   type="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password")}
                   size="md"
                   borderColor="gray.200"
                   color="gray.800"
                   _focus={{ borderColor: "#3B82F6", boxShadow: "0 0 0 1px #3B82F6" }}
                 />
+                {errors.password && (
+                  <Text fontSize="xs" color="red.500" mt={1}>
+                    {errors.password.message}
+                  </Text>
+                )}
               </Box>
 
               <Button
