@@ -5,7 +5,6 @@ import { Order } from "@/hooks/useOrdersData";
 const columnHelper = createColumnHelper<Order>();
 
 export const columns = [
-  columnHelper.accessor("order_id", { header: "Sipariş ID", cell: (info) => info.getValue() }),
   columnHelper.accessor("customer_id", { header: "Müşteri", cell: (info) => info.getValue() }),
   columnHelper.accessor("order_date", { header: "Tarih", cell: (info) => info.getValue() }),
   columnHelper.accessor("ship_country", { header: "Ülke", cell: (info) => info.getValue() }),
