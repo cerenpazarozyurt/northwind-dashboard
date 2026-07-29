@@ -177,9 +177,15 @@ export default function ProductsPage() {
             </Select.Control>
             <Portal>
               <Select.Positioner>
-                <Select.Content bg="white" color="gray.800">
+                <Select.Content
+                    bg="#0f172a"
+                    color="gray.150"        
+                    borderColor="gray.800"  
+                    shadow="xl"             
+                    borderRadius="md"       
+                  >
                   {filterCategoryOptions.items.map((c) => (
-                    <Select.Item item={c} key={c.value}>
+                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }}>
                       {c.label}
                       <Select.ItemIndicator />
                     </Select.Item>
@@ -204,9 +210,14 @@ export default function ProductsPage() {
           </Select.Control>
           <Portal>
             <Select.Positioner>
-              <Select.Content bg="white" color="gray.800">
+              <Select.Content 
+              bg="#0f172a"
+              color="gray.150"        
+              borderColor="gray.800"  
+              shadow="xl"             
+              borderRadius="md">
                 {sortOptions.items.map((s) => (
-                  <Select.Item item={s} key={s.value}>
+                  <Select.Item item={s} key={s.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                     {s.label}
                     <Select.ItemIndicator />
                   </Select.Item>
@@ -345,9 +356,14 @@ export default function ProductsPage() {
                             </Select.Control>
                             <Portal>
                               <Select.Positioner>
-                                <Select.Content bg="white" color="gray.800">
+                                <Select.Content 
+                                bg="#0f172a"           
+                                color="gray.150"       
+                                borderColor="gray.800"  
+                                shadow="xl"             
+                                borderRadius="md">
                                   {categoryOptions.items.map((c) => (
-                                    <Select.Item item={c} key={c.value}>
+                                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                                       {c.label}
                                       <Select.ItemIndicator />
                                     </Select.Item>
