@@ -7,6 +7,7 @@ import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { useQueryState, parseAsInteger, parseAsStringEnum } from "nuqs";
 
 import { useProductsData, useAddProduct, useDeleteProduct, PAGE_SIZE, Product, useUpdateProduct } from "../../hooks/useProductsData";
 import { getProductColumns } from "@/helpers/productColumns";
@@ -17,9 +18,12 @@ export default function ProductsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
-  const [page, setPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [categoryId, setCategoryId] = useState<string>("");
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [sortOrder, setSortOrder] = useQueryState(
+    "sort",
+    parseAsStringEnum(["asc", "desc"]).withDefault("asc")
+  );
+  const [categoryId, setCategoryId] = useQueryState("category", { defaultValue: "" })
   const { productsResult, isLoading, categories } = useProductsData(page, sortOrder, categoryId);  
   const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
