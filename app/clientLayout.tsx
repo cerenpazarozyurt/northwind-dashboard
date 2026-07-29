@@ -14,14 +14,21 @@ export default function clientLayout({ children }: { children: React.ReactNode }
     return <main>{children}</main>;
   }
 
-  return (
+return (
     <Box minH="100vh" bg="gray.900" color="white"> 
       <Navbar />
 
       <Box display="flex" pt="60px">
         <Sidebar />
 
-        <Box flex="1" p="6" ml={{ base: "0", md: "250px" }} overflowX="auto">
+        <Box 
+          flex="1" 
+          p={{ base: 4, md: 8 }} 
+          ml={{ base: "0", md: "240px" }}
+          w={{ base: "full", md: "calc(100% - 240px)" }}
+          minW="0"
+          overflowX="auto"
+        >
           <main>{children}</main>
         </Box>
       </Box>

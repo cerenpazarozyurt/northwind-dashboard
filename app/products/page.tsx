@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import {
-  Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner,Pagination, IconButton, ButtonGroup,
+  Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner,Pagination, IconButton, ButtonGroup, Stack
 } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useForm, Controller } from "react-hook-form";
@@ -152,17 +152,30 @@ export default function ProductsPage() {
       }
     };
 
-  return (
-    <Box>
-      <Flex justify="space-between" align="center" mb={5}>
+return (
+    <Box w="full" minW="0">
+      <Stack 
+        direction={{ base: "column", md: "row" }} 
+        justify="space-between" 
+        align={{ base: "stretch", md: "center" }} 
+        gap={4} 
+        mb={5}
+        w="full"
+      >
         <Text fontSize="lg" fontWeight="bold" color="gray.50">
           Ürünler
         </Text>
-        <Flex gap={3} align="center">
+
+        <Stack 
+          direction={{ base: "column", sm: "row" }} 
+          gap={3} 
+          align="stretch"
+          w={{ base: "full", md: "auto" }}
+        >
           <Select.Root
             collection={filterCategoryOptions}
             size="sm"
-            width="180px"
+            width={{ base: "full", md: "180px" }}
             value={[categoryId || ALL_VALUE]}
             onValueChange={(details) => {
               const picked = details.value[0];
@@ -172,7 +185,7 @@ export default function ProductsPage() {
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger>
+              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white">
                 <Select.ValueText placeholder="Kategori" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -182,14 +195,14 @@ export default function ProductsPage() {
             <Portal>
               <Select.Positioner>
                 <Select.Content
-                    bg="#0f172a"
-                    color="gray.150"        
-                    borderColor="gray.800"  
-                    shadow="xl"             
-                    borderRadius="md"       
-                  >
+                  bg="#0f172a"
+                  color="gray.150"        
+                  borderColor="gray.800"  
+                  shadow="xl"             
+                  borderRadius="md"       
+                >
                   {filterCategoryOptions.items.map((c) => (
-                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }}>
+                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                       {c.label}
                       <Select.ItemIndicator />
                     </Select.Item>
@@ -198,58 +211,64 @@ export default function ProductsPage() {
               </Select.Positioner>
             </Portal>
           </Select.Root>
-        <Select.Root
-          collection={sortOptions}
-          size="sm" width="180px" value={[sortOrder]}
-          onValueChange={(details) => setSortOrder(details.value[0] as "asc" | "desc")}
-        >
-          <Select.HiddenSelect />
-          <Select.Control>
-            <Select.Trigger>
-              <Select.ValueText>Sırala</Select.ValueText>
-            </Select.Trigger>
-            <Select.IndicatorGroup>
-              <Select.Indicator />
-            </Select.IndicatorGroup>
-          </Select.Control>
-          <Portal>
-            <Select.Positioner>
-              <Select.Content 
-              bg="#0f172a"
-              color="gray.150"        
-              borderColor="gray.800"  
-              shadow="xl"             
-              borderRadius="md">
-                {sortOptions.items.map((s) => (
-                  <Select.Item item={s} key={s.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
-                    {s.label}
-                    <Select.ItemIndicator />
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Positioner>
-          </Portal>
-        </Select.Root>
-        <Button 
-          bg="#3B82F6" 
-          color="white" 
-          _hover={{ bg: "#2563EB" }} 
-          size="sm" 
-          onClick={() => {
-            setProductToEdit(null);
-            reset({
-              product_name: "",
-              category_id: 0,
-              unit_price: "",
-              units_in_stock: "",
-            });
-            setIsOpen(true); 
-          }}
-        >
-          + Yeni Ürün Ekle
-        </Button>
-      </Flex>
-      </Flex>
+
+          <Select.Root
+            collection={sortOptions}
+            size="sm" 
+            width={{ base: "full", md: "180px" }} 
+            value={[sortOrder]}
+            onValueChange={(details) => setSortOrder(details.value[0] as "asc" | "desc")}
+          >
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white">
+                <Select.ValueText placeholder="Sırala" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content 
+                  bg="#0f172a"
+                  color="gray.150"        
+                  borderColor="gray.800"  
+                  shadow="xl"             
+                  borderRadius="md"
+                >
+                  {sortOptions.items.map((s) => (
+                    <Select.Item item={s} key={s.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                      {s.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+
+          <Button 
+            bg="#3B82F6" 
+            color="white" 
+            _hover={{ bg: "#2563EB" }} 
+            size="sm" 
+            w={{ base: "full", sm: "auto" }}
+            onClick={() => {
+              setProductToEdit(null);
+              reset({
+                product_name: "",
+                category_id: 0,
+                unit_price: "",
+                units_in_stock: "",
+              });
+              setIsOpen(true); 
+            }}
+          >
+            + Yeni Ürün Ekle
+          </Button>
+        </Stack>
+      </Stack>
       {isLoading ? (
         <Flex justify="center" py={20}>
           <Spinner size="lg" />

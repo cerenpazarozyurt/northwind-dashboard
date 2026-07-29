@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Text, Select, createListCollection, Spinner } from "@chakra-ui/react"
+import { Box, Flex, Text, Select, createListCollection, Spinner, SimpleGrid, Stack } from "@chakra-ui/react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
@@ -35,21 +35,25 @@ export default function Dashboard() {
   const pieData = calculatePieData(rawData);
 
   const chartOptions = {
-    title: { text: "Aylık Ciro" },
+    chart: { backgroundColor: "transparent" },
+    title: { text: "Aylık Ciro", style: { color: "#e5e7eb" } },
     xAxis: { 
-      categories: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"] 
+      categories: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+      labels: { style: { color: "#9ca3af" } }
     },
+    yAxis: { title: { text: "" }, labels: { style: { color: "#9ca3af" } } },
     series: [
       { 
         name: "Ciro ($)", 
-        data: monthlyRevenue
+        data: monthlyRevenue,
+        color: "#3b82f6"
       }
     ],
   };
 
   const pieOptions = {
-    chart: { type: "pie" },
-    title: { text: "En Çok Satış Yapılan Ülkeler" },
+    chart: { type: "pie", backgroundColor: "transparent" },
+    title: { text: "En Çok Satış Yapılan Ülkeler", style: { color: "#e5e7eb" } },
     series: [
       {
         name: "Sipariş Sayısı",
@@ -60,129 +64,129 @@ export default function Dashboard() {
   };
 
   if (isLoading) {
-  return (
-    <Flex justify="center" py={20}>
-      <Spinner size="lg" />
-    </Flex>
-  );
-}
+    return (
+      <Flex justify="center" py={20}>
+        <Spinner size="lg" />
+      </Flex>
+    );
+  }
 
-if (error) {
-  return (
-    <Box p={8}>
-      <Text color="red.500">Hata: {error.message}</Text>
-    </Box>
-  );
-}
+  if (error) {
+    return (
+      <Box p={8}>
+        <Text color="red.400">Hata: {error.message}</Text>
+      </Box>
+    );
+  }
 
   return (
-    <Box>
-      <Flex gap={4}>
+    <Box w="full" minW="0">
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={4} w="full">
         <Box
-          bg="white"
+          bg="gray.900"
           p={5}
           borderRadius="lg"
-          boxShadow="sm"
+          boxShadow="xl"
           border="1px solid"
-          borderColor="gray.200"
-          flex="1"
+          borderColor="gray.800"
         >
-          <Text fontSize="sm" color="gray.500" mb={1}>
+          <Text fontSize="sm" color="gray.400" mb={1}>
             Toplam Ciro
           </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             ${totalRevenue.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </Text>
         </Box>
 
-          <Box
-          bg="white"
+        <Box
+          bg="gray.900"
           p={5}
           borderRadius="lg"
-          boxShadow="sm"
+          boxShadow="xl"
           border="1px solid"
-          borderColor="gray.200"
-          flex="1"
+          borderColor="gray.800"
         >
-          <Text fontSize="sm" color="gray.500" mb={1}>
+          <Text fontSize="sm" color="gray.400" mb={1}>
             Toplam Sipariş Sayısı
           </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {totalOrders}
           </Text>
         </Box>
 
         <Box
-          bg="white"
+          bg="gray.900"
           p={5}
           borderRadius="lg"
-          boxShadow="sm"
+          boxShadow="xl"
           border="1px solid"
-          borderColor="gray.200"
-          flex="1"
+          borderColor="gray.800"
         >
-          <Text fontSize="sm" color="gray.500" mb={1}>
+          <Text fontSize="sm" color="gray.400" mb={1}>
             Toplam Müşteri
           </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {totalCustomers}
           </Text>
         </Box>
 
         <Box
-          bg="white"
+          bg="gray.900"
           p={5}
           borderRadius="lg"
-          boxShadow="sm"
+          boxShadow="xl"
           border="1px solid"
-          borderColor="gray.200"
-          flex="1"
+          borderColor="gray.800"
         >
-          <Text fontSize="sm" color="gray.500" mb={1}>
+          <Text fontSize="sm" color="gray.400" mb={1}>
             Aktif Ürün Sayısı
           </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             {totalProducts}
           </Text>
         </Box>
+      </SimpleGrid>
+
+      <Flex justify={{ base: "stretch", md: "flex-end" }} mt={6} mb={4} w="full">
+        <Select.Root 
+          collection={years} 
+          size="sm" 
+          width={{ base: "full", md: "150px" }} 
+          value={[selectedYear]} 
+          onValueChange={(e) => {
+            if (e.value[0]) setSelectedYear(e.value[0]);
+          }} 
+        >
+          <Select.HiddenSelect />
+          <Select.Control>
+            <Select.Trigger borderColor="gray.800" bg="gray.900" color="white">
+              <Select.ValueText placeholder="Yıl seç" />
+            </Select.Trigger>
+            <Select.IndicatorGroup>
+              <Select.Indicator />
+            </Select.IndicatorGroup>
+          </Select.Control>
+          <Select.Positioner>
+            <Select.Content bg="gray.900" color="gray.150" borderColor="gray.800" shadow="xl">
+              {years.items.map((year) => (
+                <Select.Item item={year} key={year.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                  {year.label}
+                  <Select.ItemIndicator />
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Positioner>
+        </Select.Root>
       </Flex>
 
-      <Flex gap={3} justify="flex-end" mt={6} mr={8}>
-      <Select.Root collection={years} size="sm" width="150px" value={[selectedYear]} 
-        onValueChange={(e) => {
-          if (e.value[0]) setSelectedYear(e.value[0]);
-        }} 
-      >
-        <Select.HiddenSelect />
-        <Select.Control>
-          <Select.Trigger borderColor="gray.300">
-            <Select.ValueText placeholder="Yıl seç" />
-          </Select.Trigger>
-          <Select.IndicatorGroup>
-            <Select.Indicator />
-          </Select.IndicatorGroup>
-        </Select.Control>
-        <Select.Positioner>
-          <Select.Content bg="white" color="gray.800">
-            {years.items.map((year) => (
-              <Select.Item item={year} key={year.value}>
-                {year.label}
-                <Select.ItemIndicator />
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Positioner>
-      </Select.Root>
-      </Flex>
-
-      <Flex gap={4} mt={6}>
-        <Box flex="1">
+      <Stack direction={{ base: "column", lg: "row" }} gap={6} mt={4} w="full">
+        <Box flex="1" bg="gray.900" p={5} borderRadius="lg" border="1px solid" borderColor="gray.800" boxShadow="xl" overflowX="auto">
           <HighchartsReact highcharts={Highcharts} options={chartOptions} />
         </Box>
-        <Box flex="1">
+        <Box flex="1" bg="gray.900" p={5} borderRadius="lg" border="1px solid" borderColor="gray.800" boxShadow="xl" overflowX="auto">
           <HighchartsReact highcharts={Highcharts} options={pieOptions} />
         </Box>
-      </Flex>
+      </Stack>
     </Box>
   );
 }

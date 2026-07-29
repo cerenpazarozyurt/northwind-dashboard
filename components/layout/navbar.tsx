@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Flex, Text, HStack, Box, Button, Menu } from "@chakra-ui/react";
+import { Flex, Text, HStack, Box, Menu } from "@chakra-ui/react";
 import { User, LogOut } from "lucide-react";
 import { supabase } from "@/utils/supabase/client";
 import { toaster } from "@/components/ui/toaster";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-
 
 const fetchUserProfile = async () => {
   const { data: { user } } = await supabase.auth.getUser();
@@ -50,7 +49,6 @@ export function Navbar() {
     }, 800);
   };
 
-  // Sunucu (SSR) tarafında tarayıcıya inene kadar render etme
   if (!mounted) {
     return null;
   }
@@ -65,9 +63,12 @@ export function Navbar() {
       align="center"
       justify="space-between"
       px={6}
+      // Mobilde soldan padding vererek hamburger butonun üstüne binmesini engelliyoruz
+      pl={{ base: "60px", md: "6" }} 
       position="fixed"
       top={0}
-      left="240px"
+      // Mobilde tam ekran (left: 0), masada sidebar payı bırakarak (left: 240px) konumlanıyor
+      left={{ base: "0", md: "240px" }}
       right={0}
       zIndex={10}
     >
@@ -97,7 +98,7 @@ export function Navbar() {
         </Menu.Trigger>
 
         <Menu.Positioner>
-          <Menu.Content bg="white" minW="160px" borderRadius="md" boxShadow="md" p={1}>
+          <Menu.Content bg="white" borderColor="gray.200" minW="160px" borderRadius="md" boxShadow="xl" p={1}>
             <Menu.Item
               value="logout"
               onClick={handleLogout}
