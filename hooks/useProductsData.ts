@@ -16,16 +16,22 @@ export type Category = {
 };
 
 export const PAGE_SIZE = 10;
-async function fetchProducts(page: number) {
+async function fetchProducts(page: number, sortOrder: "asc" | "desc", categoryId?: string) {
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from("products")
     .select("*, categories:category_id (category_name)", { count: "exact" })
-    .order("product_id", { ascending: true })
-    .range(from, to);
+    .order("product_id", { ascending: sortOrder === "asc" })
 
+    if (categoryId) {
+      query = query.eq("category_id", categoryId);
+    }
+
+    query = query.range(from, to);
+
+  const { data, error, count } = await query;
   if (error) throw new Error(error.message);
   return { products: data as Product[], total: count ?? 0 };
 }
@@ -62,10 +68,57 @@ async function insertProduct(newProduct: {
   if (error) throw new Error(error.message);
 }
 
-export function useProductsData(page: number) {
+async function deleteProduct(productId: number) {
+  const { error } = await supabase.from("products").delete().eq("product_id", productId);
+  if (error) throw new Error(error.message);
+}
+
+async function updateProduct({
+  id,
+  updatedData,
+}: {
+  id: number;
+  updatedData: {
+    product_name: string;
+    category_id: number;
+    unit_price: number;
+    units_in_stock: number;
+  };
+}) {
+  const {error} = await supabase
+    .from("products")
+    .update(updatedData)
+    .eq("product_id", id);
+
+  if(error) throw new Error(error.message);
+}
+
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"]});
+    },
+  });
+}
+
+export function useDeleteProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+}
+
+export function useProductsData(page: number, sortOrder: "asc" | "desc", categoryId?: string) {
   const productsQuery = useQuery({
-    queryKey: ["products", page],
-    queryFn: () => fetchProducts(page),
+    queryKey: ["products", page, sortOrder, categoryId],
+    queryFn: () => fetchProducts(page, sortOrder, categoryId),
   });
 
   const categoriesQuery = useQuery({

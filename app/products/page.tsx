@@ -8,16 +8,60 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
-import { useProductsData, useAddProduct, PAGE_SIZE } from "../../hooks/useProductsData";
-import { productColumns } from "@/helpers/productColumns";
+import { useProductsData, useAddProduct, useDeleteProduct, PAGE_SIZE, Product, useUpdateProduct } from "../../hooks/useProductsData";
+import { getProductColumns } from "@/helpers/productColumns";
 import { productSchema, ProductFormValues } from "@/helpers/productSchema";
 import { toaster } from "@/components/ui/toaster";
 
 export default function ProductsPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [page, setPage] = useState(1);
-  const { productsResult, isLoading, categories } = useProductsData(page);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [categoryId, setCategoryId] = useState<string>("");
+  const { productsResult, isLoading, categories } = useProductsData(page, sortOrder, categoryId);  
   const addProduct = useAddProduct();
+  const deleteProduct = useDeleteProduct();
+  const updateProduct = useUpdateProduct();
+
+  function handleDeleteClick(product: Product) {
+    setProductToDelete(product);
+  }
+
+  async function confirmDelete() {
+    if (!productToDelete) return;
+
+    try {
+      await deleteProduct.mutateAsync(productToDelete.product_id);
+      toaster.create({
+        title: "Ürün Silindi",
+        description: `${productToDelete.product_name} başarıyla silindi.`,
+        type: "success",
+        closable: true,
+      });
+      setProductToDelete(null);
+    } catch (error) {
+      toaster.create({
+        title: "Ürün Silinemedi",
+        description:
+          error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        type: "error",
+        closable: true,
+      });
+    }
+  }
+
+  function handleEditClick(product: Product) {
+      setProductToEdit(product);
+      reset({
+        product_name: product.product_name,
+        category_id: product.category_id ?? 0,
+        unit_price: String(product.unit_price),       
+        units_in_stock: String(product.units_in_stock),
+      });
+      setIsOpen(true);
+    }
 
   const {
     register,
@@ -29,6 +73,13 @@ export default function ProductsPage() {
     resolver: zodResolver(productSchema),
   });
 
+  const sortOptions = createListCollection({
+    items: [
+      { label: "Eskiden Yeniye", value: "asc" },
+      { label: "Yeniden Eskiye", value: "desc" },
+    ],
+  });
+
   const categoryOptions = createListCollection({
     items: (categories ?? []).map((c) => ({
       label: c.category_name,
@@ -36,25 +87,66 @@ export default function ProductsPage() {
     })),
   });
 
+  const ALL_VALUE = "__all__";
+
+  const filterCategoryOptions = createListCollection({
+    items: [
+      { label: "Tüm Kategoriler", value: ALL_VALUE },
+      ...(categories ?? []).map((c) => ({
+        label: c.category_name,
+        value: String(c.category_id),
+      })),
+    ],
+  });
+
   //TanStack Table
   const table = useReactTable({
     data: productsResult?.products ?? [],
-    columns: productColumns,
+    columns: getProductColumns(handleDeleteClick, handleEditClick),
     getCoreRowModel: getCoreRowModel(),
   });
 
   const onSubmit = (formData: ProductFormValues) => {
-    addProduct.mutate(formData, {
-      onSuccess: () => {
-        toaster.create({ title: "Ürün Başarıyla Eklendi!", type: "success" });
-        setIsOpen(false);
-        reset();
-      },
-      onError: (error) => {
-        toaster.create({ title: "Hata", description: error.message, type: "error" });
-      },
-    });
-  };
+      if (productToEdit) {
+        updateProduct.mutate(
+          {
+            id: productToEdit.product_id,
+            updatedData: {
+              product_name: formData.product_name,
+              category_id: formData.category_id,
+              unit_price: Number(formData.unit_price),
+              units_in_stock: Number(formData.units_in_stock),
+            },
+          },
+          {
+            onSuccess: () => {
+              toaster.create({ title: "Ürün Başarıyla Güncellendi!", type: "success" });
+              setIsOpen(false);
+              setProductToEdit(null);
+              reset();
+            },
+            onError: (error: unknown) => {
+              toaster.create({ 
+                title: "Hata", 
+                description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.", 
+                type: "error" 
+              });
+          },
+          }
+        );
+      } else {
+        addProduct.mutate(formData, {
+          onSuccess: () => {
+            toaster.create({ title: "Ürün Başarıyla Eklendi!", type: "success" });
+            setIsOpen(false);
+            reset();
+          },
+          onError: (error) => {
+            toaster.create({ title: "Hata", description: error.message, type: "error" });
+          },
+        });
+      }
+    };
 
   return (
     <Box>
@@ -62,11 +154,87 @@ export default function ProductsPage() {
         <Text fontSize="lg" fontWeight="bold" color="gray.50">
           Ürünler
         </Text>
-        <Button bg="#3B82F6" color="white" _hover={{ bg: "#2563EB" }} size="sm" onClick={() => setIsOpen(true)}>
+        <Flex gap={3} align="center">
+          <Select.Root
+            collection={filterCategoryOptions}
+            size="sm"
+            width="180px"
+            value={[categoryId || ALL_VALUE]}
+            onValueChange={(details) => {
+              const picked = details.value[0];
+              setCategoryId(picked === ALL_VALUE ? "" : picked);
+              setPage(1);
+            }}
+          >
+            <Select.HiddenSelect />
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText placeholder="Kategori" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content bg="white" color="gray.800">
+                  {filterCategoryOptions.items.map((c) => (
+                    <Select.Item item={c} key={c.value}>
+                      {c.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+        <Select.Root
+          collection={sortOptions}
+          size="sm" width="180px" value={[sortOrder]}
+          onValueChange={(details) => setSortOrder(details.value[0] as "asc" | "desc")}
+        >
+          <Select.HiddenSelect />
+          <Select.Control>
+            <Select.Trigger>
+              <Select.ValueText>Sırala</Select.ValueText>
+            </Select.Trigger>
+            <Select.IndicatorGroup>
+              <Select.Indicator />
+            </Select.IndicatorGroup>
+          </Select.Control>
+          <Portal>
+            <Select.Positioner>
+              <Select.Content bg="white" color="gray.800">
+                {sortOptions.items.map((s) => (
+                  <Select.Item item={s} key={s.value}>
+                    {s.label}
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Portal>
+        </Select.Root>
+        <Button 
+          bg="#3B82F6" 
+          color="white" 
+          _hover={{ bg: "#2563EB" }} 
+          size="sm" 
+          onClick={() => {
+            setProductToEdit(null);
+            reset({
+              product_name: "",
+              category_id: 0,
+              unit_price: "",
+              units_in_stock: "",
+            });
+            setIsOpen(true); 
+          }}
+        >
           + Yeni Ürün Ekle
         </Button>
       </Flex>
-
+      </Flex>
       {isLoading ? (
         <Flex justify="center" py={20}>
           <Spinner size="lg" />
@@ -127,7 +295,14 @@ export default function ProductsPage() {
         </>
       )}
 
-      <Dialog.Root open={isOpen} onOpenChange={(d) => setIsOpen(d.open)}>
+      <Dialog.Root open={isOpen} onOpenChange={(d) => {
+          setIsOpen(d.open);
+          if (!d.open) {
+            setProductToEdit(null);
+            reset();
+          }
+        }}
+      >
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
@@ -220,6 +395,51 @@ export default function ProductsPage() {
                   </Button>
                 </Dialog.Footer>
               </form>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+
+      <Dialog.Root
+        open={productToDelete !== null}
+        onOpenChange={(details) => {
+          if (!details.open && !deleteProduct.isPending) {
+            setProductToDelete(null);
+          }
+        }}
+        role="alertdialog"
+      >
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Ürünü Sil</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Text>
+                  <strong>{productToDelete?.product_name}</strong> ürününü silmek
+                  istediğinize emin misiniz?
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={deleteProduct.isPending}
+                  onClick={() => setProductToDelete(null)}
+                >
+                  İptal
+                </Button>
+                <Button
+                  colorPalette="red"
+                  size="sm"
+                  loading={deleteProduct.isPending}
+                  onClick={confirmDelete}
+                >
+                  Sil
+                </Button>
+              </Dialog.Footer>
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>
