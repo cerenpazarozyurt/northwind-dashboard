@@ -63,11 +63,9 @@ export function Navbar() {
       align="center"
       justify="space-between"
       px={6}
-      // Mobilde soldan padding vererek hamburger butonun üstüne binmesini engelliyoruz
       pl={{ base: "60px", md: "6" }} 
       position="fixed"
       top={0}
-      // Mobilde tam ekran (left: 0), masada sidebar payı bırakarak (left: 240px) konumlanıyor
       left={{ base: "0", md: "240px" }}
       right={0}
       zIndex={10}
