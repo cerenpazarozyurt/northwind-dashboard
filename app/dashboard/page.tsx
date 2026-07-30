@@ -4,6 +4,7 @@ import { Box, Flex, Text, Select, createListCollection, Spinner, SimpleGrid, Sta
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
+import { DollarSign, Package, ShoppingCart, Users } from "lucide-react";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { 
   calculateTotalRevenue, 
@@ -36,6 +37,14 @@ export default function Dashboard() {
 
   const chartOptions = {
     chart: { backgroundColor: "transparent" },
+    credits: { enabled: false },
+    tooltip: {
+      backgroundColor: "#111827",
+      borderColor: "#374151",
+      borderRadius: 8,
+      shadow: true,
+      style: { color: "#f9fafb" },
+    },
     title: { text: "Aylık Ciro", style: { color: "#e5e7eb" } },
     xAxis: { 
       categories: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
@@ -53,6 +62,14 @@ export default function Dashboard() {
 
   const pieOptions = {
     chart: { type: "pie", backgroundColor: "transparent" },
+    credits: { enabled: false },
+    tooltip: {
+      backgroundColor: "#111827",
+      borderColor: "#374151",
+      borderRadius: 8,
+      shadow: true,
+      style: { color: "#f9fafb" },
+    },
     title: { text: "En Çok Satış Yapılan Ülkeler", style: { color: "#e5e7eb" } },
     series: [
       {
@@ -81,73 +98,129 @@ export default function Dashboard() {
 
   return (
     <Box w="full" minW="0">
-      <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={4} w="full">
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={5} w="full">
         <Box
           bg="gray.900"
           p={5}
-          borderRadius="lg"
-          boxShadow="xl"
+          borderRadius="xl"
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
           border="1px solid"
           borderColor="gray.800"
+          borderTop="3px solid"
+          borderTopColor="blue.400"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
+          _hover={{
+            transform: "translateY(-2px)",
+            boxShadow: "0 14px 34px rgba(0, 0, 0, 0.45)",
+          }}
         >
-          <Text fontSize="sm" color="gray.400" mb={1}>
-            Toplam Ciro
-          </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            ${totalRevenue.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </Text>
+          <Flex align="center" justify="space-between" gap={4}>
+            <Box>
+              <Text fontSize="sm" color="gray.400" mb={1}>
+                Toplam Ciro
+              </Text>
+              <Text fontSize="2xl" fontWeight="bold" color="white">
+                ${totalRevenue.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </Text>
+            </Box>
+            <Flex w={10} h={10} align="center" justify="center" borderRadius="lg" bg="blue.950" color="blue.400">
+              <DollarSign size={20} />
+            </Flex>
+          </Flex>
         </Box>
 
         <Box
           bg="gray.900"
           p={5}
-          borderRadius="lg"
-          boxShadow="xl"
+          borderRadius="xl"
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
           border="1px solid"
           borderColor="gray.800"
+          borderTop="3px solid"
+          borderTopColor="purple.400"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
+          _hover={{
+            transform: "translateY(-2px)",
+            boxShadow: "0 14px 34px rgba(0, 0, 0, 0.45)",
+          }}
         >
-          <Text fontSize="sm" color="gray.400" mb={1}>
-            Toplam Sipariş Sayısı
-          </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            {totalOrders}
-          </Text>
+          <Flex align="center" justify="space-between" gap={4}>
+            <Box>
+              <Text fontSize="sm" color="gray.400" mb={1}>
+                Toplam Sipariş Sayısı
+              </Text>
+              <Text fontSize="2xl" fontWeight="bold" color="white">
+                {totalOrders}
+              </Text>
+            </Box>
+            <Flex w={10} h={10} align="center" justify="center" borderRadius="lg" bg="purple.950" color="purple.400">
+              <ShoppingCart size={20} />
+            </Flex>
+          </Flex>
         </Box>
 
         <Box
           bg="gray.900"
           p={5}
-          borderRadius="lg"
-          boxShadow="xl"
+          borderRadius="xl"
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
           border="1px solid"
           borderColor="gray.800"
+          borderTop="3px solid"
+          borderTopColor="green.400"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
+          _hover={{
+            transform: "translateY(-2px)",
+            boxShadow: "0 14px 34px rgba(0, 0, 0, 0.45)",
+          }}
         >
-          <Text fontSize="sm" color="gray.400" mb={1}>
-            Toplam Müşteri
-          </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            {totalCustomers}
-          </Text>
+          <Flex align="center" justify="space-between" gap={4}>
+            <Box>
+              <Text fontSize="sm" color="gray.400" mb={1}>
+                Toplam Müşteri
+              </Text>
+              <Text fontSize="2xl" fontWeight="bold" color="white">
+                {totalCustomers}
+              </Text>
+            </Box>
+            <Flex w={10} h={10} align="center" justify="center" borderRadius="lg" bg="green.950" color="green.400">
+              <Users size={20} />
+            </Flex>
+          </Flex>
         </Box>
 
         <Box
           bg="gray.900"
           p={5}
-          borderRadius="lg"
-          boxShadow="xl"
+          borderRadius="xl"
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
           border="1px solid"
           borderColor="gray.800"
+          borderTop="3px solid"
+          borderTopColor="orange.400"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
+          _hover={{
+            transform: "translateY(-2px)",
+            boxShadow: "0 14px 34px rgba(0, 0, 0, 0.45)",
+          }}
         >
-          <Text fontSize="sm" color="gray.400" mb={1}>
-            Aktif Ürün Sayısı
-          </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            {totalProducts}
-          </Text>
+          <Flex align="center" justify="space-between" gap={4}>
+            <Box>
+              <Text fontSize="sm" color="gray.400" mb={1}>
+                Aktif Ürün Sayısı
+              </Text>
+              <Text fontSize="2xl" fontWeight="bold" color="white">
+                {totalProducts}
+              </Text>
+            </Box>
+            <Flex w={10} h={10} align="center" justify="center" borderRadius="lg" bg="orange.950" color="orange.400">
+              <Package size={20} />
+            </Flex>
+          </Flex>
         </Box>
       </SimpleGrid>
 
-      <Flex justify={{ base: "stretch", md: "flex-end" }} mt={6} mb={4} w="full">
+      <Flex justify={{ base: "stretch", md: "flex-end" }} my={5} w="full">
         <Select.Root 
           collection={years} 
           size="sm" 
@@ -179,11 +252,11 @@ export default function Dashboard() {
         </Select.Root>
       </Flex>
 
-      <Stack direction={{ base: "column", lg: "row" }} gap={6} mt={4} w="full">
-        <Box flex="1" bg="gray.900" p={5} borderRadius="lg" border="1px solid" borderColor="gray.800" boxShadow="xl" overflowX="auto">
+      <Stack direction={{ base: "column", lg: "row" }} gap={5} w="full">
+        <Box flex="1" bg="gray.900" p={5} borderRadius="xl" border="1px solid" borderColor="gray.800" boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)" overflowX="auto">
           <HighchartsReact highcharts={Highcharts} options={chartOptions} />
         </Box>
-        <Box flex="1" bg="gray.900" p={5} borderRadius="lg" border="1px solid" borderColor="gray.800" boxShadow="xl" overflowX="auto">
+        <Box flex="1" bg="gray.900" p={5} borderRadius="xl" border="1px solid" borderColor="gray.800" boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)" overflowX="auto">
           <HighchartsReact highcharts={Highcharts} options={pieOptions} />
         </Box>
       </Stack>

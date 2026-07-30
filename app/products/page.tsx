@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import {
-  Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner,Pagination, IconButton, ButtonGroup, Stack
+  Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner, Pagination, IconButton, ButtonGroup, Stack
 } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useForm, Controller } from "react-hook-form";
@@ -61,7 +61,7 @@ export default function ProductsPage() {
       reset({
         product_name: product.product_name,
         category_id: product.category_id ?? 0,
-        unit_price: String(product.unit_price),       
+        unit_price: String(product.unit_price),      
         units_in_stock: String(product.units_in_stock),
       });
       setIsOpen(true);
@@ -103,7 +103,6 @@ export default function ProductsPage() {
     ],
   });
 
-  //TanStack Table
   const table = useReactTable({
     data: productsResult?.products ?? [],
     columns: getProductColumns(handleDeleteClick, handleEditClick),
@@ -158,13 +157,18 @@ return (
         direction={{ base: "column", md: "row" }} 
         justify="space-between" 
         align={{ base: "stretch", md: "center" }} 
-        gap={4} 
+        gap={5} 
         mb={5}
         w="full"
       >
-        <Text fontSize="lg" fontWeight="bold" color="gray.50">
-          Ürünler
-        </Text>
+        <Box>
+          <Text fontSize="xl" fontWeight="semibold" color="white">
+            Ürünler
+          </Text>
+          <Text fontSize="sm" color="gray.400" mt={1}>
+            {productsResult?.total ?? 0} ürün kaydı
+          </Text>
+        </Box>
 
         <Stack 
           direction={{ base: "column", sm: "row" }} 
@@ -185,7 +189,7 @@ return (
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white">
+              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
                 <Select.ValueText placeholder="Kategori" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -194,13 +198,7 @@ return (
             </Select.Control>
             <Portal>
               <Select.Positioner>
-                <Select.Content
-                  bg="#0f172a"
-                  color="gray.150"        
-                  borderColor="gray.800"  
-                  shadow="xl"             
-                  borderRadius="md"       
-                >
+                <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
                   {filterCategoryOptions.items.map((c) => (
                     <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                       {c.label}
@@ -221,7 +219,7 @@ return (
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white">
+              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
                 <Select.ValueText placeholder="Sırala" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -230,13 +228,7 @@ return (
             </Select.Control>
             <Portal>
               <Select.Positioner>
-                <Select.Content 
-                  bg="#0f172a"
-                  color="gray.150"        
-                  borderColor="gray.800"  
-                  shadow="xl"             
-                  borderRadius="md"
-                >
+                <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
                   {sortOptions.items.map((s) => (
                     <Select.Item item={s} key={s.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                       {s.label}
@@ -253,6 +245,7 @@ return (
             color="white" 
             _hover={{ bg: "#2563EB" }} 
             size="sm" 
+            borderRadius="lg"
             w={{ base: "full", sm: "auto" }}
             onClick={() => {
               setProductToEdit(null);
@@ -269,66 +262,114 @@ return (
           </Button>
         </Stack>
       </Stack>
+
       {isLoading ? (
         <Flex justify="center" py={20}>
           <Spinner size="lg" />
         </Flex>
       ) : (
         <>
-        <Table.Root size="sm" variant="outline" native>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </Table.Root>
+        <Box
+          overflowX="auto"
+          borderWidth="1px"
+          borderTopWidth="3px"
+          borderColor="gray.800"
+          borderTopColor="orange.400"
+          borderRadius="xl"
+          bg="gray.900"
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
+        >
+          <Table.Root
+            size="sm"
+            variant="outline"
+            native
+            css={{
+              "& tbody tr": {
+                transition: "background-color 0.15s ease",
+              },
+              "& tbody tr:hover": {
+                backgroundColor: "#111827",
+              },
+            }}
+          >
+            <thead style={{ backgroundColor: "#111827" }}>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} style={{ color: "#F3F4F6", borderBottom: "1px solid #1F2937", padding: "14px 16px", fontWeight: "600" }}>
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id} style={{ borderBottom: "1px solid #1F2937" }}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} style={{ color: "#D1D5DB", padding: "14px 16px" }}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </Table.Root>
+        </Box>
 
-        <Flex justify="center" mt={6}>
+        <Flex justify="center" mt={5}>
           <Pagination.Root
             count={productsResult?.total ?? 0}
             pageSize={PAGE_SIZE}
             page={page}
+            siblingCount={1}
             onPageChange={(details) => setPage(details.page)}
           >
-          <ButtonGroup variant="outline" size="sm">
+          <ButtonGroup variant="outline" size="sm" borderColor="gray.700" boxShadow="sm">
             <Pagination.PrevTrigger asChild>
-              <IconButton><LuChevronLeft /></IconButton>
+              <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronLeft /></IconButton>
             </Pagination.PrevTrigger>
         
             <Pagination.Items
+              ellipsis={
+                <Box
+                  minW="9"
+                  h="9"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  bg="gray.900"
+                  color="gray.400"
+                  borderWidth="1px"
+                  borderColor="gray.700"
+                  borderRadius="md"
+                >
+                  …
+                </Box>
+              }
               render={(item) => (
-                <IconButton variant={{ base: "outline", _selected: "solid" }}>
+                <IconButton 
+                  variant={{ base: "outline", _selected: "solid" }}
+                  bg={item.value === page ? "blue.600" : "gray.900"}
+                  color="white"
+                  borderColor="gray.700"
+                  _hover={{ bg: item.value === page ? "blue.700" : "gray.800" }}
+                >
                   {item.value}
                 </IconButton>
               )}
             />
         
             <Pagination.NextTrigger asChild>
-              <IconButton><LuChevronRight /></IconButton>
-                </Pagination.NextTrigger>
-              </ButtonGroup>
+              <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronRight /></IconButton>
+            </Pagination.NextTrigger>
+          </ButtonGroup>
           </Pagination.Root>
         </Flex>
         </>
       )}
 
+      {/* Ürün Ekle / Düzenle Modal (Koyu Tema) */}
       <Dialog.Root open={isOpen} onOpenChange={(d) => {
           setIsOpen(d.open);
           if (!d.open) {
@@ -340,24 +381,24 @@ return (
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title>Yeni Ürün Ekle</Dialog.Title>
+                <Dialog.Title color="white">{productToEdit ? "Ürünü Düzenle" : "Yeni Ürün Ekle"}</Dialog.Title>
               </Dialog.Header>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Dialog.Body>
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.product_name}>
-                      <Field.Label>Ürün Adı</Field.Label>
-                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" />
-                      <Field.ErrorText>{errors.product_name?.message}</Field.ErrorText>
+                      <Field.Label color="gray.300">Ürün Adı</Field.Label>
+                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.ErrorText color="red.400">{errors.product_name?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
 
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.category_id}>
-                      <Field.Label>Kategori</Field.Label>
+                      <Field.Label color="gray.300">Kategori</Field.Label>
                       <Controller
                         name="category_id"
                         control={control}
@@ -370,7 +411,7 @@ return (
                           >
                             <Select.HiddenSelect />
                             <Select.Control>
-                              <Select.Trigger>
+                              <Select.Trigger bg="white" borderColor="gray.300" color="gray.900">
                                 <Select.ValueText placeholder="Kategori seç" />
                               </Select.Trigger>
                               <Select.IndicatorGroup>
@@ -379,12 +420,7 @@ return (
                             </Select.Control>
                             <Portal>
                               <Select.Positioner>
-                                <Select.Content 
-                                bg="#0f172a"           
-                                color="gray.150"       
-                                borderColor="gray.800"  
-                                shadow="xl"             
-                                borderRadius="md">
+                                <Select.Content bg="white" color="gray.900" borderColor="gray.300" shadow="xl" borderRadius="md">
                                   {categoryOptions.items.map((c) => (
                                     <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
                                       {c.label}
@@ -397,29 +433,29 @@ return (
                           </Select.Root>
                         )}
                       />
-                      <Field.ErrorText>{errors.category_id?.message}</Field.ErrorText>
+                      <Field.ErrorText color="red.400">{errors.category_id?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
 
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.unit_price}>
-                      <Field.Label>Birim Fiyatı</Field.Label>
-                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" />
-                      <Field.ErrorText>{errors.unit_price?.message}</Field.ErrorText>
+                      <Field.Label color="gray.300">Birim Fiyatı</Field.Label>
+                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.ErrorText color="red.400">{errors.unit_price?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
 
                   <Box mb={2}>
                     <Field.Root invalid={!!errors.units_in_stock}>
-                      <Field.Label>Stok Miktarı</Field.Label>
-                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" />
-                      <Field.ErrorText>{errors.units_in_stock?.message}</Field.ErrorText>
+                      <Field.Label color="gray.300">Stok Miktarı</Field.Label>
+                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.ErrorText color="red.400">{errors.units_in_stock?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
                 </Dialog.Body>
 
                 <Dialog.Footer>
-                  <Button variant="outline" size="sm" mr={3} onClick={() => setIsOpen(false)} type="button">
+                  <Button variant="outline" size="sm" mr={3} onClick={() => setIsOpen(false)} type="button" borderColor="gray.700" color="gray.300" _hover={{ bg: "gray.800" }}>
                     İptal
                   </Button>
                   <Button
@@ -428,7 +464,7 @@ return (
                     _hover={{ bg: "#2563EB" }}
                     size="sm"
                     type="submit"
-                    loading={addProduct.isPending}
+                    loading={productToEdit ? updateProduct.isPending : addProduct.isPending}
                   >
                     Kaydet
                   </Button>
@@ -439,6 +475,7 @@ return (
         </Portal>
       </Dialog.Root>
 
+      {/* Ürün Sil Modal (Koyu Tema) */}
       <Dialog.Root
         open={productToDelete !== null}
         onOpenChange={(details) => {
@@ -451,20 +488,22 @@ return (
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title>Ürünü Sil</Dialog.Title>
+                <Dialog.Title color="white">Ürünü Sil</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                <Text>
-                  <strong>{productToDelete?.product_name}</strong> ürününü silmek
-                  istediğinize emin misiniz?
+                <Text color="gray.300">
+                  <strong style={{ color: "white" }}>{productToDelete?.product_name}</strong> ürününü silmek istediğinize emin misiniz?
                 </Text>
               </Dialog.Body>
               <Dialog.Footer>
                 <Button
                   variant="outline"
                   size="sm"
+                  borderColor="gray.700"
+                  color="gray.300"
+                  _hover={{ bg: "gray.800" }}
                   disabled={deleteProduct.isPending}
                   onClick={() => setProductToDelete(null)}
                 >

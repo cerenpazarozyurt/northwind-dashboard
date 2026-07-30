@@ -1,5 +1,5 @@
 "use client"; 
-import { Badge, Table, Box, Flex, Pagination, ButtonGroup, IconButton, Input, InputGroup, Select, createListCollection, Spinner } from "@chakra-ui/react"
+import { Table, Box, Flex, Text, Pagination, ButtonGroup, IconButton, Input, InputGroup, Select, createListCollection, Spinner, Portal } from "@chakra-ui/react"
 import { LuChevronLeft, LuChevronRight, LuSearch } from "react-icons/lu"
 
 import {
@@ -34,12 +34,37 @@ export default function OrdersPage() {
   });
 
   return (
-    <Box>
-      <Flex gap={3} mb={4} justify="flex-end">
-        <InputGroup startElement={<LuSearch />} width="240px">
+    <Box w="full" minW="0">
+      <Flex
+        align={{ base: "stretch", md: "center" }}
+        justify="space-between"
+        gap={5}
+        mb={5}
+        direction={{ base: "column", md: "row" }}
+      >
+        <Box>
+          <Text fontSize="xl" fontWeight="semibold" color="white">
+            Siparişler
+          </Text>
+          <Text fontSize="sm" color="gray.400" mt={1}>
+            {ordersResult?.total ?? 0} sipariş kaydı
+          </Text>
+        </Box>
+
+        <Flex gap={3} direction={{ base: "column", sm: "row" }}>
+        <InputGroup
+          startElement={<LuSearch color="#9ca3af" />}
+          width={{ base: "full", sm: "240px" }}
+        >
           <Input
             placeholder="Müşteri kodu ara..."
             size="sm"
+            bg="gray.900"
+            color="white"
+            borderColor="gray.800"
+            borderRadius="lg"
+            _placeholder={{ color: "gray.400" }}
+            _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3b82f6" }}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -48,7 +73,7 @@ export default function OrdersPage() {
         <Select.Root
           collection={countries}
           size="sm"
-          width="180px"
+          width={{ base: "full", sm: "180px" }}
           value={[country || ALL_VALUE]}
           onValueChange={(details) => {
             const picked = details.value[0];
@@ -60,77 +85,140 @@ export default function OrdersPage() {
         >
           <Select.HiddenSelect />
           <Select.Control>
-            <Select.Trigger>
+            <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
               <Select.ValueText placeholder="Ülke seç" />
             </Select.Trigger>
             <Select.IndicatorGroup>
               <Select.Indicator />
             </Select.IndicatorGroup>
           </Select.Control>
-          <Select.Positioner>
-            <Select.Content bg="white" color="gray.800">
-              {countries.items.map((c) => (
-                <Select.Item item={c} key={c.value}>
-                  {c.label}
-                  <Select.ItemIndicator />
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Positioner>
+          <Portal>
+            <Select.Positioner>
+              <Select.Content 
+                bg="#0f172a" 
+                color="gray.150" 
+                borderColor="gray.800" 
+                shadow="xl" 
+                borderRadius="md"
+              >
+                {countries.items.map((c) => (
+                  <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                    {c.label}
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Portal>
         </Select.Root>
+        </Flex>
       </Flex>
  
       {isLoading ? (
-        <Flex justify="center" py={10}>
+        <Flex justify="center" py={20}>
             <Spinner size="lg" />
         </Flex>
         ) : (
         <>
-          <Table.Root size="sm" variant="outline" native>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </Table.Root>
+          <Box
+            overflowX="auto"
+            borderWidth="1px"
+            borderTopWidth="3px"
+            borderColor="gray.800"
+            borderTopColor="blue.400"
+            borderRadius="xl"
+            bg="gray.900"
+            boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
+          >
+            <Table.Root
+              size="sm"
+              variant="outline"
+              native
+              css={{
+                "& tbody tr": {
+                  transition: "background-color 0.15s ease",
+                },
+                "& tbody tr:hover": {
+                  backgroundColor: "#111827",
+                },
+              }}
+            >
+              <thead style={{ backgroundColor: "#111827" }}>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th 
+                        key={header.id}
+                        style={{ color: "#F3F4F6", borderBottom: "1px solid #1F2937", padding: "14px 16px", fontWeight: "600" }}
+                      >
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id} style={{ borderBottom: "1px solid #1F2937" }}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td 
+                        key={cell.id}
+                        style={{ color: "#D1D5DB", padding: "14px 16px" }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </Table.Root>
+          </Box>
 
-          <Flex justify="center" mt={6}>
+          <Flex justify="center" mt={5}>
             <Pagination.Root
               count={ordersResult?.total ?? 0}
               pageSize={PAGE_SIZE}
               page={page}
+              siblingCount={1}
               onPageChange={(details) => updateParams({ page: String(details.page) })}
             >
-              <ButtonGroup variant="outline" size="sm">
+              <ButtonGroup variant="outline" size="sm" borderColor="gray.700" boxShadow="sm">
                 <Pagination.PrevTrigger asChild>
-                  <IconButton><LuChevronLeft /></IconButton>
+                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronLeft /></IconButton>
                 </Pagination.PrevTrigger>
 
                 <Pagination.Items
+                  ellipsis={
+                    <Box
+                      minW="9"
+                      h="9"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="gray.900"
+                      color="gray.400"
+                      borderWidth="1px"
+                      borderColor="gray.700"
+                      borderRadius="md"
+                    >
+                      …
+                    </Box>
+                  }
                   render={(item) => (
-                    <IconButton variant={{ base: "outline", _selected: "solid" }}>
+                    <IconButton 
+                      variant={{ base: "outline", _selected: "solid" }}
+                      bg={item.value === page ? "blue.600" : "gray.900"}
+                      color="white"
+                      borderColor="gray.700"
+                      _hover={{ bg: item.value === page ? "blue.700" : "gray.800" }}
+                    >
                       {item.value}
                     </IconButton>
                   )}
                 />
 
                 <Pagination.NextTrigger asChild>
-                  <IconButton><LuChevronRight /></IconButton>
+                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronRight /></IconButton>
                 </Pagination.NextTrigger>
               </ButtonGroup>
             </Pagination.Root>
