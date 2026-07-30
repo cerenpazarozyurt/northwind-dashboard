@@ -369,7 +369,6 @@ return (
         </>
       )}
 
-      {/* Ürün Ekle / Düzenle Modal (Koyu Tema) */}
       <Dialog.Root open={isOpen} onOpenChange={(d) => {
           setIsOpen(d.open);
           if (!d.open) {
@@ -475,7 +474,6 @@ return (
         </Portal>
       </Dialog.Root>
 
-      {/* Ürün Sil Modal (Koyu Tema) */}
       <Dialog.Root
         open={productToDelete !== null}
         onOpenChange={(details) => {

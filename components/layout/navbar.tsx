@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Flex, Text, HStack, Box, Menu } from "@chakra-ui/react";
 import { User, LogOut } from "lucide-react";
 import { supabase } from "@/utils/supabase/client";
@@ -23,12 +22,7 @@ const fetchUserProfile = async () => {
 };
 
 export function Navbar() {
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const { data: profile } = useQuery({
     queryKey: ["userProfile"],
@@ -49,17 +43,14 @@ export function Navbar() {
     }, 800);
   };
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <Flex
       as="header"
       h="60px"
-      bg="white"
+      bg="gray.800"
       borderBottom="1px solid"
-      borderColor="gray.200"
+      borderColor="gray.700"
+      boxShadow="0 4px 16px rgba(0, 0, 0, 0.16)"
       align="center"
       justify="space-between"
       px={6}
@@ -70,25 +61,35 @@ export function Navbar() {
       right={0}
       zIndex={10}
     >
-      <Text fontWeight="semibold" color="gray.800" fontSize="sm">
+      <Text fontWeight="semibold" color="gray.100" fontSize="sm">
         Northwind Traders
       </Text>
 
       <Menu.Root positioning={{ placement: "bottom-end" }}>
         <Menu.Trigger asChild>
-          <HStack gap={3} cursor="pointer" p={1} _hover={{ opacity: 0.8 }}>
-            <Text fontSize="sm" color="gray.600" fontWeight="medium">
-              {profile?.first_name ? profile.first_name : "Kullanıcı"}
+          <HStack
+            gap={3}
+            cursor="pointer"
+            px={2}
+            py={1}
+            borderRadius="lg"
+            _hover={{ bg: "gray.700" }}
+            transition="background-color 0.15s ease"
+          >
+            <Text fontSize="sm" color="gray.300" fontWeight="medium">
+              {profile?.first_name
+                ? `${profile.first_name} ${profile.last_name ?? ""}`.trim()
+                : "Kullanıcı"}
             </Text>
             <Box
               w="32px"
               h="32px"
               borderRadius="full"
-              bg="gray.100"
+              bg="blue.900"
               display="flex"
               alignItems="center"
               justifyContent="center"
-              color="gray.500"
+              color="blue.400"
             >
               <User size={18} />
             </Box>
@@ -96,13 +97,21 @@ export function Navbar() {
         </Menu.Trigger>
 
         <Menu.Positioner>
-          <Menu.Content bg="white" borderColor="gray.200" minW="160px" borderRadius="md" boxShadow="xl" p={1}>
+          <Menu.Content
+            bg="gray.800"
+            borderColor="gray.600"
+            color="gray.100"
+            minW="170px"
+            borderRadius="lg"
+            boxShadow="0 12px 30px rgba(0, 0, 0, 0.4)"
+            p={1}
+          >
             <Menu.Item
               value="logout"
               onClick={handleLogout}
-              color="red.500"
+              color="red.400"
               cursor="pointer"
-              _hover={{ bg: "red.50" }}
+              _hover={{ bg: "red.900", color: "red.200" }}
               p={2}
               borderRadius="sm"
             >

@@ -9,7 +9,6 @@ import { LoginSchema, LoginFormValues } from "@/helpers/authSchemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors }, } = useForm<LoginFormValues>({ resolver: zodResolver(LoginSchema) });
   const [isLoading, setIsLoading] = useState(false);
@@ -53,11 +52,34 @@ export default function LoginPage() {
   };
 
   return (
-    <Flex minH="100vh" bg="#F3F4F6" overflow="hidden">
-      <Flex flex="1" align="center" justify="center" bg="white" p={8}>
-        <Box w="full" maxW="340px">
-          <Box mb={8}>
-            <Text fontSize="xl" fontWeight="bold" color="gray.800" mb={1}>
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bg="#0B1120"
+      p={{ base: 4, md: 8 }}
+    >
+      <Box
+        w="full"
+        maxW="420px"
+        bg="white"
+        p={{ base: 6, md: 8 }}
+        borderRadius="2xl"
+        borderWidth="1px"
+        borderColor="gray.200"
+        boxShadow="0 24px 60px rgba(0, 0, 0, 0.35)"
+      >
+          <Box textAlign="center" mb={8}>
+            <Text fontSize="md" fontWeight="bold" color="gray.900">
+              Northwind Traders
+            </Text>
+            <Text fontSize="xs" color="gray.500">
+              Yönetim Paneli
+            </Text>
+          </Box>
+
+          <Box mb={6}>
+            <Text fontSize="2xl" fontWeight="bold" color="gray.900" mb={1}>
               Giriş yapın
             </Text>
             <Text fontSize="sm" color="gray.500">
@@ -76,8 +98,11 @@ export default function LoginPage() {
                   placeholder="ornek@sirket.com"
                   {...register("email")}
                   size="md"
-                  borderColor="gray.200"
-                  color="gray.800"
+                  bg="gray.50"
+                  borderColor="gray.300"
+                  borderRadius="lg"
+                  color="gray.900"
+                  _placeholder={{ color: "gray.400" }}
                   _focus={{ borderColor: "#3B82F6", boxShadow: "0 0 0 1px #3B82F6" }}
                 />
                 {errors.email && (
@@ -101,8 +126,11 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   {...register("password")}
                   size="md"
-                  borderColor="gray.200"
-                  color="gray.800"
+                  bg="gray.50"
+                  borderColor="gray.300"
+                  borderRadius="lg"
+                  color="gray.900"
+                  _placeholder={{ color: "gray.400" }}
                   _focus={{ borderColor: "#3B82F6", boxShadow: "0 0 0 1px #3B82F6" }}
                 />
                 {errors.password && (
@@ -120,6 +148,8 @@ export default function LoginPage() {
                 width="full"
                 size="md"
                 mt={2}
+                borderRadius="lg"
+                boxShadow="0 8px 18px rgba(37, 99, 235, 0.25)"
                 loading={isLoading}
                 loadingText="Doğrulanıyor..."
               >
@@ -134,8 +164,7 @@ export default function LoginPage() {
               Kayıt olun
             </Link>
           </Text>
-        </Box>
-      </Flex>
+      </Box>
     </Flex>
   );
 }

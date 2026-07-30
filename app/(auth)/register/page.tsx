@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Box, Button, Input, VStack, HStack, Text, Flex } from "@chakra-ui/react";
+import { Box, Button, Input, VStack, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 import { supabase } from "@/utils/supabase/client";
 import { toaster } from "@/components/ui/toaster";
 import { RegisterSchema, RegisterFormValues } from "@/helpers/authSchemas";
@@ -11,8 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputStyles = {
   size: "md" as const,
-  borderColor: "gray.200",
-  color: "gray.800",
+  bg: "gray.50",
+  borderColor: "gray.300",
+  borderRadius: "lg",
+  color: "gray.900",
+  _placeholder: { color: "gray.400" },
   _focus: { borderColor: "#3B82F6", boxShadow: "0 0 0 1px #3B82F6" },
 };
 
@@ -78,11 +81,34 @@ export default function RegisterPage() {
   };
 
   return (
-    <Flex minH="100vh" bg="#F3F4F6" overflow="hidden">
-      <Flex flex="1" align="center" justify="center" bg="white" p={8}>
-        <Box w="full" maxW="340px">
-          <Box mb={8}>
-            <Text fontSize="xl" fontWeight="bold" color="gray.800" mb={1}>
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bg="#0B1120"
+      p={{ base: 4, md: 8 }}
+    >
+      <Box
+        w="full"
+        maxW="480px"
+        bg="white"
+        p={{ base: 6, md: 8 }}
+        borderRadius="2xl"
+        borderWidth="1px"
+        borderColor="gray.200"
+        boxShadow="0 24px 60px rgba(0, 0, 0, 0.35)"
+      >
+          <Box textAlign="center" mb={8}>
+            <Text fontSize="md" fontWeight="bold" color="gray.900">
+              Northwind Traders
+            </Text>
+            <Text fontSize="xs" color="gray.500">
+              Yönetim Paneli
+            </Text>
+          </Box>
+
+          <Box mb={6}>
+            <Text fontSize="2xl" fontWeight="bold" color="gray.900" mb={1}>
               Hesap oluşturun
             </Text>
             <Text fontSize="sm" color="gray.500">
@@ -92,7 +118,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit(handleRegister)}>
             <VStack gap={4} align="stretch">
-              <HStack w="full" gap={4}>
+              <SimpleGrid columns={{ base: 1, sm: 2 }} gap={4}>
                 <Box flex="1">
                   <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1.5}>
                     Ad
@@ -123,7 +149,7 @@ export default function RegisterPage() {
                     </Text>
                   )}
                 </Box>
-              </HStack>
+              </SimpleGrid>
 
               <Box>
                 <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1.5}>
@@ -167,6 +193,8 @@ export default function RegisterPage() {
                 width="full"
                 size="md"
                 mt={2}
+                borderRadius="lg"
+                boxShadow="0 8px 18px rgba(37, 99, 235, 0.25)"
                 loading={isLoading}
                 loadingText="Kaydediliyor..."
               >
@@ -181,8 +209,7 @@ export default function RegisterPage() {
               Giriş yapın
             </Link>
           </Text>
-        </Box>
-      </Flex>
+      </Box>
     </Flex>
   );
 }
