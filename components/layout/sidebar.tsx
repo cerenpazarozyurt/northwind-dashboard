@@ -5,12 +5,13 @@ import { Box, VStack, HStack, Text, Link as ChakraLink, IconButton } from "@chak
 import { Drawer } from "@chakra-ui/react"; 
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, Package, Menu, X } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, Menu, X, Users } from "lucide-react";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/orders", label: "Siparişler", icon: ShoppingCart },
   { href: "/products", label: "Ürünler", icon: Package },
+  { href: "/customers", label: "Müşteriler", icon: Users},
 ];
 
 export function Sidebar() {
