@@ -16,7 +16,7 @@ const links = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false); //sunucu tarafında üretilen html ile tarayıcının ilk yüklediği html çakışmasın diye
   const [isOpen, setIsOpen] = useState(false); 
 
   useEffect(() => {

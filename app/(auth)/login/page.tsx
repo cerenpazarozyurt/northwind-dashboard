@@ -113,14 +113,9 @@ export default function LoginPage() {
               </Box>
 
               <Box>
-                <Flex justify="space-between" mb={1.5}>
-                  <Text fontSize="sm" fontWeight="medium" color="gray.700">
-                    Şifre
-                  </Text>
-                  <Text fontSize="xs" color="#3B82F6" cursor="pointer">
-                    Şifremi unuttum
-                  </Text>
-                </Flex>
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={1.5}>
+                  Şifre
+                </Text>
                 <Input
                   type="password"
                   placeholder="••••••••"
