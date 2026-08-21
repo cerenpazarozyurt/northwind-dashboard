@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import {
   Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner, Pagination, IconButton, ButtonGroup, Stack
@@ -26,17 +26,17 @@ export default function ProductsPage() {
     parseAsStringEnum(["asc", "desc"]).withDefault("asc")
   );
   const [categoryId, setCategoryId] = useQueryState("category", { defaultValue: "" })
-  const { productsResult, isLoading, categories } = useProductsData(page, sortOrder, categoryId);  
+  const { productsResult, isLoading, categories } = useProductsData(page, sortOrder, categoryId);
   const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
   const updateProduct = useUpdateProduct();
 
   const c = useThemeColors();
-  const theadBg   = useColorModeValue("#F9FAFB", "#111827");
-  const thColor   = useColorModeValue("#1F2937", "#F3F4F6");
-  const thBorder  = useColorModeValue("#E5E7EB", "#1F2937");
-  const tdColor   = useColorModeValue("#374151", "#D1D5DB");
-  const trBorder  = useColorModeValue("#E5E7EB", "#1F2937");
+  const theadBg = useColorModeValue("#F9FAFB", "#111827");
+  const thColor = useColorModeValue("#1F2937", "#F3F4F6");
+  const thBorder = useColorModeValue("#E5E7EB", "#1F2937");
+  const tdColor = useColorModeValue("#374151", "#D1D5DB");
+  const trBorder = useColorModeValue("#E5E7EB", "#1F2937");
   const trHoverBg = useColorModeValue("#F9FAFB", "#111827");
 
   function handleDeleteClick(product: Product) {
@@ -67,15 +67,15 @@ export default function ProductsPage() {
   }
 
   function handleEditClick(product: Product) {
-      setProductToEdit(product);
-      reset({
-        product_name: product.product_name,
-        category_id: product.category_id ?? 0,
-        unit_price: String(product.unit_price),      
-        units_in_stock: String(product.units_in_stock),
-      });
-      setIsOpen(true);
-    }
+    setProductToEdit(product);
+    reset({
+      product_name: product.product_name,
+      category_id: product.category_id ?? 0,
+      unit_price: String(product.unit_price),
+      units_in_stock: String(product.units_in_stock),
+    });
+    setIsOpen(true);
+  }
 
   const {
     register,
@@ -83,7 +83,7 @@ export default function ProductsPage() {
     control,
     reset,
     formState: { errors },
-} = useForm({
+  } = useForm({
     resolver: zodResolver(productSchema),
   });
 
@@ -120,54 +120,54 @@ export default function ProductsPage() {
   });
 
   const onSubmit = (formData: ProductFormValues) => {
-      if (productToEdit) {
-        updateProduct.mutate(
-          {
-            id: productToEdit.product_id,
-            updatedData: {
-              product_name: formData.product_name,
-              category_id: formData.category_id,
-              unit_price: Number(formData.unit_price),
-              units_in_stock: Number(formData.units_in_stock),
-            },
+    if (productToEdit) {
+      updateProduct.mutate(
+        {
+          id: productToEdit.product_id,
+          updatedData: {
+            product_name: formData.product_name,
+            category_id: formData.category_id,
+            unit_price: Number(formData.unit_price),
+            units_in_stock: Number(formData.units_in_stock),
           },
-          {
-            onSuccess: () => {
-              toaster.create({ title: "Ürün Başarıyla Güncellendi!", type: "success" });
-              setIsOpen(false);
-              setProductToEdit(null);
-              reset();
-            },
-            onError: (error: unknown) => {
-              toaster.create({ 
-                title: "Hata", 
-                description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.", 
-                type: "error" 
-              });
-          },
-          }
-        );
-      } else {
-        addProduct.mutate(formData, {
+        },
+        {
           onSuccess: () => {
-            toaster.create({ title: "Ürün Başarıyla Eklendi!", type: "success" });
+            toaster.create({ title: "Ürün Başarıyla Güncellendi!", type: "success" });
             setIsOpen(false);
+            setProductToEdit(null);
             reset();
           },
-          onError: (error) => {
-            toaster.create({ title: "Hata", description: error.message, type: "error" });
+          onError: (error: unknown) => {
+            toaster.create({
+              title: "Hata",
+              description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+              type: "error"
+            });
           },
-        });
-      }
-    };
+        }
+      );
+    } else {
+      addProduct.mutate(formData, {
+        onSuccess: () => {
+          toaster.create({ title: "Ürün Başarıyla Eklendi!", type: "success" });
+          setIsOpen(false);
+          reset();
+        },
+        onError: (error) => {
+          toaster.create({ title: "Hata", description: error.message, type: "error" });
+        },
+      });
+    }
+  };
 
-return (
+  return (
     <Box w="full" minW="0">
-      <Stack 
-        direction={{ base: "column", md: "row" }} 
-        justify="space-between" 
-        align={{ base: "stretch", md: "center" }} 
-        gap={5} 
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align={{ base: "stretch", md: "center" }}
+        gap={5}
         mb={5}
         w="full"
       >
@@ -180,9 +180,9 @@ return (
           </Text>
         </Box>
 
-        <Stack 
-          direction={{ base: "column", sm: "row" }} 
-          gap={3} 
+        <Stack
+          direction={{ base: "column", sm: "row" }}
+          gap={3}
           align="stretch"
           w={{ base: "full", md: "auto" }}
         >
@@ -209,9 +209,9 @@ return (
             <Portal>
               <Select.Positioner>
                 <Select.Content bg={c.selectContentBg} color={c.selectContentText} borderColor={c.cardBorder} shadow="xl" borderRadius="md">
-                  {filterCategoryOptions.items.map((c) => (
-                    <Select.Item item={c} key={c.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
-                      {c.label}
+                  {filterCategoryOptions.items.map((cat) => (
+                    <Select.Item item={cat} key={cat.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
+                      {cat.label}
                       <Select.ItemIndicator />
                     </Select.Item>
                   ))}
@@ -222,8 +222,8 @@ return (
 
           <Select.Root
             collection={sortOptions}
-            size="sm" 
-            width={{ base: "full", md: "180px" }} 
+            size="sm"
+            width={{ base: "full", md: "180px" }}
             value={[sortOrder]}
             onValueChange={(details) => setSortOrder(details.value[0] as "asc" | "desc")}
           >
@@ -250,11 +250,11 @@ return (
             </Portal>
           </Select.Root>
 
-          <Button 
-            bg="#3B82F6" 
-            color="white" 
-            _hover={{ bg: "#2563EB" }} 
-            size="sm" 
+          <Button
+            bg="#3B82F6"
+            color="white"
+            _hover={{ bg: "#2563EB" }}
+            size="sm"
             borderRadius="lg"
             w={{ base: "full", sm: "auto" }}
             onClick={() => {
@@ -265,7 +265,7 @@ return (
                 unit_price: "",
                 units_in_stock: "",
               });
-              setIsOpen(true); 
+              setIsOpen(true);
             }}
           >
             + Yeni Ürün Ekle
@@ -279,113 +279,113 @@ return (
         </Flex>
       ) : (
         <>
-        <Box
-          overflowX="auto"
-          borderWidth="1px"
-          borderTopWidth="3px"
-          borderColor={c.cardBorder}
-          borderTopColor="orange.400"
-          borderRadius="xl"
-          bg={c.cardBg}
-          boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)"
-        >
-          <Table.Root
-            size="sm"
-            variant="outline"
-            native
-            css={{
-              "& tbody tr": {
-                transition: "background-color 0.15s ease",
-              },
-              "& tbody tr:hover": {
-                backgroundColor: trHoverBg,
-              },
-            }}
+          <Box
+            overflowX="auto"
+            borderWidth="1px"
+            borderTopWidth="3px"
+            borderColor={c.cardBorder}
+            borderTopColor="orange.400"
+            borderRadius="xl"
+            bg={c.cardBg}
+            boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)"
           >
-            <thead style={{ backgroundColor: trHoverBg }}>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} style={{ color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "14px 16px", fontWeight: "600" }}>
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} style={{ borderBottom: `1px solid ${trBorder}` }}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} style={{ color: tdColor, padding: "14px 16px" }}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </Table.Root>
-        </Box>
+            <Table.Root
+              size="sm"
+              variant="outline"
+              native
+              css={{
+                "& tbody tr": {
+                  transition: "background-color 0.15s ease",
+                },
+                "& tbody tr:hover": {
+                  backgroundColor: trHoverBg,
+                },
+              }}
+            >
+              <thead style={{ backgroundColor: trHoverBg }}>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th key={header.id} style={{ color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "14px 16px", fontWeight: "600" }}>
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id} style={{ borderBottom: `1px solid ${trBorder}` }}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} style={{ color: tdColor, padding: "14px 16px" }}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </Table.Root>
+          </Box>
 
-        <Flex justify="center" mt={5}>
-          <Pagination.Root
-            count={productsResult?.total ?? 0}
-            pageSize={PAGE_SIZE}
-            page={page}
-            siblingCount={1}
-            onPageChange={(details) => setPage(details.page)}
-          >
-          <ButtonGroup variant="outline" size="sm" borderColor={c.cardBorder} boxShadow="sm">
-            <Pagination.PrevTrigger asChild>
-              <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronLeft /></IconButton>
-            </Pagination.PrevTrigger>
-        
-            <Pagination.Items
-              ellipsis={
-                <Box
-                  minW="9"
-                  h="9"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  bg={c.cardBg}
-                  color={c.subTextColor}
-                  borderWidth="1px"
-                  borderColor={c.cardBorder}
-                  borderRadius="md"
-                >
-                  …
-                </Box>
-              }
-              render={(item) => (
-                <IconButton 
-                  variant={{ base: "outline", _selected: "solid" }}
-                  bg={item.value === page ? "blue.600" : c.cardBg}
-                  color={item.value === page ? "white" : c.headingColor}
-                  borderColor={c.cardBorder}
-                  _hover={{ bg: item.value === page ? "blue.700" : c.tableRowHover }}
-                >
-                  {item.value}
-                </IconButton>
-              )}
-            />
-        
-            <Pagination.NextTrigger asChild>
-              <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronRight /></IconButton>
-            </Pagination.NextTrigger>
-          </ButtonGroup>
-          </Pagination.Root>
-        </Flex>
+          <Flex justify="center" mt={5}>
+            <Pagination.Root
+              count={productsResult?.total ?? 0}
+              pageSize={PAGE_SIZE}
+              page={page}
+              siblingCount={1}
+              onPageChange={(details) => setPage(details.page)}
+            >
+              <ButtonGroup variant="outline" size="sm" borderColor={c.cardBorder} boxShadow="sm">
+                <Pagination.PrevTrigger asChild>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronLeft /></IconButton>
+                </Pagination.PrevTrigger>
+
+                <Pagination.Items
+                  ellipsis={
+                    <Box
+                      minW="9"
+                      h="9"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      bg={c.cardBg}
+                      color={c.subTextColor}
+                      borderWidth="1px"
+                      borderColor={c.cardBorder}
+                      borderRadius="md"
+                    >
+                      …
+                    </Box>
+                  }
+                  render={(item) => (
+                    <IconButton
+                      variant={{ base: "outline", _selected: "solid" }}
+                      bg={item.value === page ? "blue.600" : c.cardBg}
+                      color={item.value === page ? "white" : c.headingColor}
+                      borderColor={c.cardBorder}
+                      _hover={{ bg: item.value === page ? "blue.700" : c.tableRowHover }}
+                    >
+                      {item.value}
+                    </IconButton>
+                  )}
+                />
+
+                <Pagination.NextTrigger asChild>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronRight /></IconButton>
+                </Pagination.NextTrigger>
+              </ButtonGroup>
+            </Pagination.Root>
+          </Flex>
         </>
       )}
 
       <Dialog.Root open={isOpen} onOpenChange={(d) => {
-          setIsOpen(d.open);
-          if (!d.open) {
-            setProductToEdit(null);
-            reset();
-          }
-        }}
+        setIsOpen(d.open);
+        if (!d.open) {
+          setProductToEdit(null);
+          reset();
+        }
+      }}
       >
         <Portal>
           <Dialog.Backdrop />
@@ -400,7 +400,7 @@ return (
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.product_name}>
                       <Field.Label color={c.bodyText}>Ürün Adı</Field.Label>
-                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" bg="white" borderColor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.product_name?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
@@ -420,7 +420,7 @@ return (
                           >
                             <Select.HiddenSelect />
                             <Select.Control>
-                              <Select.Trigger bg="white" bordercolor={c.bodyText} color="gray.900">
+                              <Select.Trigger bg="white" borderColor={c.bodyText} color="gray.900">
                                 <Select.ValueText placeholder="Kategori seç" />
                               </Select.Trigger>
                               <Select.IndicatorGroup>
@@ -429,10 +429,10 @@ return (
                             </Select.Control>
                             <Portal>
                               <Select.Positioner>
-                                <Select.Content bg="white" color="gray.900" bordercolor={c.bodyText} shadow="xl" borderRadius="md">
-                                  {categoryOptions.items.map((c) => (
-                                    <Select.Item item={c} key={c.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
-                                      {c.label}
+                                <Select.Content bg="white" color="gray.900" borderColor={c.bodyText} shadow="xl" borderRadius="md">
+                                  {categoryOptions.items.map((cat) => (
+                                    <Select.Item item={cat} key={cat.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
+                                      {cat.label}
                                       <Select.ItemIndicator />
                                     </Select.Item>
                                   ))}
@@ -449,7 +449,7 @@ return (
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.unit_price}>
                       <Field.Label color={c.bodyText}>Birim Fiyatı</Field.Label>
-                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" bg="white" borderColor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.unit_price?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
@@ -457,7 +457,7 @@ return (
                   <Box mb={2}>
                     <Field.Root invalid={!!errors.units_in_stock}>
                       <Field.Label color={c.bodyText}>Stok Miktarı</Field.Label>
-                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" bg="white" borderColor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.units_in_stock?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
