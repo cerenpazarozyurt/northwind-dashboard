@@ -11,10 +11,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useColorModeValue } from "@/components/ui/color-mode";
 
 import { useOrdersData, PAGE_SIZE } from "@/hooks/useOrdersData";
 import { useOrderFilters } from "@/hooks/useOrderFilters";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
+import { useThemeColors } from "@/hooks/useThemeColors";
 import { columns } from "@/helpers/orderColumns";
 import {
   calcLineTotal,
@@ -23,19 +25,6 @@ import {
 } from "@/helpers/orderDetailHelpers";
 
 const ALL_VALUE = "__all__";
-
-const thStyle = {
-  color: "#F3F4F6",
-  borderBottom: "1px solid #1F2937",
-  padding: "12px 14px",
-  fontWeight: "600",
-  textAlign: "left" as const,
-};
-
-const tdStyle = {
-  color: "#D1D5DB",
-  padding: "12px 14px",
-};
 
 export default function OrdersPage() {
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
@@ -46,6 +35,18 @@ export default function OrdersPage() {
     isLoading: isDetailLoading,
     error: detailError,
   } = useOrderDetail(selectedOrderId);
+
+  const c = useThemeColors();
+  // Inline style için gerçek hex değerleri (Chakra token string'leri inline style'da çalışmaz)
+  const theadBg      = useColorModeValue("#F9FAFB", "#111827");
+  const thColor      = useColorModeValue("#1F2937", "#F3F4F6");
+  const thBorder     = useColorModeValue("#E5E7EB", "#1F2937");
+  const tdColor      = useColorModeValue("#374151", "#D1D5DB");
+  const trBorder     = useColorModeValue("#E5E7EB", "#1F2937");
+  const trHoverBg    = useColorModeValue("#F9FAFB", "#111827");
+
+  const thStyle = { color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "12px 14px", fontWeight: "600", textAlign: "left" as const };
+  const tdStyle = { color: tdColor, padding: "12px 14px" };
 
   const countries = createListCollection({
     items: [
@@ -78,10 +79,10 @@ export default function OrdersPage() {
         direction={{ base: "column", md: "row" }}
       >
         <Box>
-          <Text fontSize="xl" fontWeight="semibold" color="white">
+          <Text fontSize="xl" fontWeight="semibold" color={c.headingColor}>
             Siparişler
           </Text>
-          <Text fontSize="sm" color="gray.400" mt={1}>
+          <Text fontSize="sm" color={c.subTextColor} mt={1}>
             {ordersResult?.total ?? 0} sipariş kaydı
           </Text>
         </Box>
@@ -94,11 +95,11 @@ export default function OrdersPage() {
             <Input
               placeholder="Müşteri kodu ara..."
               size="sm"
-              bg="gray.900"
-              color="white"
-              borderColor="gray.800"
+              bg={c.inputBg}
+              color={c.inputText}
+              borderColor={c.inputBorder}
               borderRadius="lg"
-              _placeholder={{ color: "gray.400" }}
+              _placeholder={{ color: c.inputPlaceholder }}
               _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3b82f6" }}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -120,7 +121,7 @@ export default function OrdersPage() {
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
+              <Select.Trigger bg={c.inputBg} borderColor={c.inputBorder} color={c.inputText} borderRadius="lg">
                 <Select.ValueText placeholder="Ülke seç" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -130,15 +131,15 @@ export default function OrdersPage() {
             <Portal>
               <Select.Positioner>
                 <Select.Content
-                  bg="#0f172a"
-                  color="gray.150"
-                  borderColor="gray.800"
+                  bg={c.selectContentBg}
+                  color={c.selectContentText}
+                  borderColor={c.cardBorder}
                   shadow="xl"
                   borderRadius="md"
                 >
-                  {countries.items.map((c) => (
-                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
-                      {c.label}
+                  {countries.items.map((country) => (
+                    <Select.Item item={country} key={country.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
+                      {country.label}
                       <Select.ItemIndicator />
                     </Select.Item>
                   ))}
@@ -159,11 +160,11 @@ export default function OrdersPage() {
             overflowX="auto"
             borderWidth="1px"
             borderTopWidth="3px"
-            borderColor="gray.800"
+            borderColor={c.cardBorder}
             borderTopColor="blue.400"
             borderRadius="xl"
-            bg="gray.900"
-            boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
+            bg={c.cardBg}
+            boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)"
           >
             <Table.Root
               size="sm"
@@ -175,17 +176,17 @@ export default function OrdersPage() {
                   cursor: "pointer",
                 },
                 "& tbody tr:hover": {
-                  backgroundColor: "#111827",
+                  backgroundColor: trHoverBg,
                 },
               }}
             >
-              <thead style={{ backgroundColor: "#111827" }}>
+              <thead style={{ backgroundColor: theadBg }}>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        style={{ color: "#F3F4F6", borderBottom: "1px solid #1F2937", padding: "14px 16px", fontWeight: "600" }}
+                        style={{ color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "14px 16px", fontWeight: "600" }}
                       >
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
@@ -197,13 +198,13 @@ export default function OrdersPage() {
                 {table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    style={{ borderBottom: "1px solid #1F2937" }}
+                    style={{ borderBottom: `1px solid ${trBorder}` }}
                     onClick={() => setSelectedOrderId(row.original.order_id)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        style={{ color: "#D1D5DB", padding: "14px 16px" }}
+                        style={{ color: tdColor, padding: "14px 16px" }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -222,23 +223,20 @@ export default function OrdersPage() {
               siblingCount={1}
               onPageChange={(details) => updateParams({ page: String(details.page) })}
             >
-              <ButtonGroup variant="outline" size="sm" borderColor="gray.700" boxShadow="sm">
+              <ButtonGroup variant="outline" size="sm" borderColor={c.cardBorder} boxShadow="sm">
                 <Pagination.PrevTrigger asChild>
-                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronLeft /></IconButton>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronLeft /></IconButton>
                 </Pagination.PrevTrigger>
 
                 <Pagination.Items
                   ellipsis={
                     <Box
-                      minW="9"
-                      h="9"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="gray.900"
-                      color="gray.400"
+                      minW="9" h="9"
+                      display="flex" alignItems="center" justifyContent="center"
+                      bg={c.cardBg}
+                      color={c.subTextColor}
                       borderWidth="1px"
-                      borderColor="gray.700"
+                      borderColor={c.cardBorder}
                       borderRadius="md"
                     >
                       …
@@ -247,10 +245,10 @@ export default function OrdersPage() {
                   render={(item) => (
                     <IconButton
                       variant={{ base: "outline", _selected: "solid" }}
-                      bg={item.value === page ? "blue.600" : "gray.900"}
-                      color="white"
-                      borderColor="gray.700"
-                      _hover={{ bg: item.value === page ? "blue.700" : "gray.800" }}
+                      bg={item.value === page ? "blue.600" : c.cardBg}
+                      color={item.value === page ? "white" : c.headingColor}
+                      borderColor={c.cardBorder}
+                      _hover={{ bg: item.value === page ? "blue.700" : c.tableRowHover }}
                     >
                       {item.value}
                     </IconButton>
@@ -258,7 +256,7 @@ export default function OrdersPage() {
                 />
 
                 <Pagination.NextTrigger asChild>
-                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronRight /></IconButton>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronRight /></IconButton>
                 </Pagination.NextTrigger>
               </ButtonGroup>
             </Pagination.Root>
@@ -277,9 +275,9 @@ export default function OrdersPage() {
           <Dialog.Backdrop />
           <Dialog.Positioner>
             <Dialog.Content
-              bg="#0f172a"
-              color="gray.100"
-              borderColor="gray.800"
+              bg={c.dialogBg}
+              color={c.headingColor}
+              borderColor={c.dialogBorder}
               borderWidth="1px"
               shadow="2xl"
               maxW="720px"
@@ -287,7 +285,7 @@ export default function OrdersPage() {
               mx={4}
             >
               <Dialog.Header>
-                <Dialog.Title color="white">Sipariş Detayı</Dialog.Title>
+                <Dialog.Title color={c.headingColor}>Sipariş Detayı</Dialog.Title>
               </Dialog.Header>
 
               <Dialog.Body>
@@ -302,86 +300,68 @@ export default function OrdersPage() {
                     <Flex direction={{ base: "column", md: "row" }} gap={4} mb={6}>
                       <Box
                         flex="1"
-                        bg="gray.900"
+                        bg={c.cardBg}
                         borderWidth="1px"
-                        borderColor="gray.800"
+                        borderColor={c.cardBorder}
                         borderRadius="lg"
                         p={4}
                       >
-                        <Text fontSize="sm" color="gray.400" mb={2}>
-                          Müşteri
-                        </Text>
-                        <Text fontWeight="semibold" color="white" mb={1}>
+                        <Text fontSize="sm" color={c.subTextColor} mb={2}>Müşteri</Text>
+                        <Text fontWeight="semibold" color={c.headingColor} mb={1}>
                           {orderDetail.customer?.company_name ?? orderDetail.order.customer_id}
                         </Text>
-                        <Text fontSize="sm" color="gray.300">
+                        <Text fontSize="sm" color={c.bodyText}>
                           {orderDetail.customer?.contact_name ?? "—"}
                         </Text>
-                        <Text fontSize="sm" color="gray.400">
+                        <Text fontSize="sm" color={c.subTextColor}>
                           {orderDetail.customer?.phone ?? "—"}
                         </Text>
-                        <Text fontSize="sm" color="gray.400" mt={2}>
-                          {[orderDetail.customer?.city, orderDetail.customer?.country]
-                            .filter(Boolean)
-                            .join(", ") || "—"}
+                        <Text fontSize="sm" color={c.subTextColor} mt={2}>
+                          {[orderDetail.customer?.city, orderDetail.customer?.country].filter(Boolean).join(", ") || "—"}
                         </Text>
                       </Box>
 
                       <Box
                         flex="1"
-                        bg="gray.900"
+                        bg={c.cardBg}
                         borderWidth="1px"
-                        borderColor="gray.800"
+                        borderColor={c.cardBorder}
                         borderRadius="lg"
                         p={4}
                       >
-                        <Text fontSize="sm" color="gray.400" mb={2}>
-                          Kargo
-                        </Text>
-                        <Text fontWeight="semibold" color="white" mb={1}>
+                        <Text fontSize="sm" color={c.subTextColor} mb={2}>Kargo</Text>
+                        <Text fontWeight="semibold" color={c.headingColor} mb={1}>
                           {orderDetail.order.ship_name}
                         </Text>
-                        <Text fontSize="sm" color="gray.300">
+                        <Text fontSize="sm" color={c.bodyText}>
                           {orderDetail.order.ship_address}
                         </Text>
-                        <Text fontSize="sm" color="gray.400">
-                          {[
-                            orderDetail.order.ship_city,
-                            orderDetail.order.ship_postal_code,
-                            orderDetail.order.ship_country,
-                          ]
-                            .filter(Boolean)
-                            .join(", ")}
+                        <Text fontSize="sm" color={c.subTextColor}>
+                          {[orderDetail.order.ship_city, orderDetail.order.ship_postal_code, orderDetail.order.ship_country].filter(Boolean).join(", ")}
                         </Text>
                         <Flex align="center" gap={3} mt={3}>
-                          <Badge
-                            colorPalette={
-                              orderDetail.order.shipped_date ? "green" : "yellow"
-                            }
-                          >
-                            {orderDetail.order.shipped_date
-                              ? "Kargolandı"
-                              : "Beklemede"}
+                          <Badge colorPalette={orderDetail.order.shipped_date ? "green" : "yellow"}>
+                            {orderDetail.order.shipped_date ? "Kargolandı" : "Beklemede"}
                           </Badge>
-                          <Text fontSize="sm" color="gray.400">
+                          <Text fontSize="sm" color={c.subTextColor}>
                             Kargo: {formatMoney(orderDetail.order.freight)}
                           </Text>
                         </Flex>
                       </Box>
                     </Flex>
 
-                    <Text fontSize="sm" fontWeight="semibold" color="gray.200" mb={3}>
+                    <Text fontSize="sm" fontWeight="semibold" color={c.headingColor} mb={3}>
                       Ürün Kalemleri
                     </Text>
 
                     <Box
                       overflowX="auto"
                       borderWidth="1px"
-                      borderColor="gray.800"
+                      borderColor={c.cardBorder}
                       borderRadius="lg"
                     >
                       <Table.Root size="sm" variant="outline" native>
-                        <thead style={{ backgroundColor: "#111827" }}>
+                        <thead style={{ backgroundColor: theadBg }}>
                           <tr>
                             <th style={thStyle}>Ürün</th>
                             <th style={thStyle}>Adet</th>
@@ -394,7 +374,7 @@ export default function OrdersPage() {
                           {orderDetail.items.map((item) => (
                             <tr
                               key={`${item.order_id}-${item.product_id}`}
-                              style={{ borderBottom: "1px solid #1F2937" }}
+                              style={{ borderBottom: `1px solid ${trBorder}` }}
                             >
                               <td style={tdStyle}>
                                 {item.products?.product_name ?? `Ürün ${item.product_id}`}
@@ -418,13 +398,13 @@ export default function OrdersPage() {
                     </Box>
 
                     <Flex justify="flex-end" mt={4} gap={6}>
-                      <Text fontSize="sm" color="gray.400">
+                      <Text fontSize="sm" color={c.subTextColor}>
                         Kalemler: {formatMoney(itemsTotal)}
                       </Text>
-                      <Text fontSize="sm" color="gray.400">
+                      <Text fontSize="sm" color={c.subTextColor}>
                         Kargo: {formatMoney(orderDetail.order.freight)}
                       </Text>
-                      <Text fontSize="sm" fontWeight="semibold" color="white">
+                      <Text fontSize="sm" fontWeight="semibold" color={c.headingColor}>
                         Toplam: {formatMoney(itemsTotal + orderDetail.order.freight)}
                       </Text>
                     </Flex>

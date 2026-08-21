@@ -14,6 +14,8 @@ import { useCustomersData, useAddCustomer, useDeleteCustomer, useUpdateCustomer,
 import { getCustomerColumns } from "@/helpers/customerColumns";
 import { customerSchema, CustomerFormValues } from "@/helpers/customerSchema";
 import { toaster } from "@/components/ui/toaster";
+import { useColorModeValue } from "@/components/ui/color-mode";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 const ALL_VALUE = "__all__";
 
@@ -33,6 +35,14 @@ export default function CustomerPage() {
   const addCustomer = useAddCustomer();
   const deleteCustomer = useDeleteCustomer();
   const updateCustomer = useUpdateCustomer();
+
+  const c = useThemeColors();
+  const theadBg   = useColorModeValue("#F9FAFB", "#111827");
+  const thColor   = useColorModeValue("#1F2937", "#F3F4F6");
+  const thBorder  = useColorModeValue("#E5E7EB", "#1F2937");
+  const tdColor   = useColorModeValue("#374151", "#D1D5DB");
+  const trBorder  = useColorModeValue("#E5E7EB", "#1F2937");
+  const trHoverBg = useColorModeValue("#F9FAFB", "#111827");
 
   const {
     register,
@@ -133,6 +143,7 @@ export default function CustomerPage() {
 
   return (
     <Box w="full" minW="0">
+      {/* Başlık + Yeni Müşteri butonu */}
       <Stack
         direction={{ base: "column", md: "row" }}
         justify="space-between"
@@ -142,10 +153,10 @@ export default function CustomerPage() {
         w="full"
       >
         <Box>
-          <Text fontSize="xl" fontWeight="semibold" color="white">
+          <Text fontSize="xl" fontWeight="semibold" color={c.headingColor}>
             Müşteriler
           </Text>
-          <Text fontSize="sm" color="gray.400" mt={1}>
+          <Text fontSize="sm" color={c.subTextColor} mt={1}>
             {customersResult?.total ?? 0} müşteri kaydı
           </Text>
         </Box>
@@ -159,14 +170,7 @@ export default function CustomerPage() {
           w={{ base: "full", sm: "auto" }}
           onClick={() => {
             setEditingCustomer(null);
-            reset({
-              company_name: "",
-              contact_name: "",
-              contact_title: "",
-              city: "",
-              country: "",
-              phone: "",
-            });
+            reset({ company_name: "", contact_name: "", contact_title: "", city: "", country: "", phone: "" });
             setIsOpen(true);
           }}
         >
@@ -174,10 +178,11 @@ export default function CustomerPage() {
         </Button>
       </Stack>
 
-      <Stack 
-        direction={{ base: "column", sm: "row" }} 
-        gap={3} 
-        mb={5} 
+      {/* Filtreler */}
+      <Stack
+        direction={{ base: "column", sm: "row" }}
+        gap={3}
+        mb={5}
         w="full"
         justify={{ base: "flex-start", sm: "flex-end" }}
       >
@@ -188,11 +193,11 @@ export default function CustomerPage() {
           <Input
             placeholder="Şirket adı ara..."
             size="sm"
-            bg="gray.900"
-            color="white"
-            borderColor="gray.800"
+            bg={c.inputBg}
+            color={c.inputText}
+            borderColor={c.inputBorder}
             borderRadius="lg"
-            _placeholder={{ color: "gray.400" }}
+            _placeholder={{ color: c.inputPlaceholder }}
             _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3b82f6" }}
             value={searchInput}
             onChange={(e) => {
@@ -217,19 +222,17 @@ export default function CustomerPage() {
         >
           <Select.HiddenSelect />
           <Select.Control>
-            <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
+            <Select.Trigger bg={c.inputBg} borderColor={c.inputBorder} color={c.inputText} borderRadius="lg">
               <Select.ValueText placeholder="Şehir" />
             </Select.Trigger>
-            <Select.IndicatorGroup>
-              <Select.Indicator />
-            </Select.IndicatorGroup>
+            <Select.IndicatorGroup><Select.Indicator /></Select.IndicatorGroup>
           </Select.Control>
           <Portal>
             <Select.Positioner>
-              <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
-                {cityOptions.items.map((c) => (
-                  <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
-                    {c.label}
+              <Select.Content bg={c.selectContentBg} color={c.selectContentText} borderColor={c.cardBorder} shadow="xl" borderRadius="md">
+                {cityOptions.items.map((item) => (
+                  <Select.Item item={item} key={item.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
+                    {item.label}
                     <Select.ItemIndicator />
                   </Select.Item>
                 ))}
@@ -251,19 +254,17 @@ export default function CustomerPage() {
         >
           <Select.HiddenSelect />
           <Select.Control>
-            <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
+            <Select.Trigger bg={c.inputBg} borderColor={c.inputBorder} color={c.inputText} borderRadius="lg">
               <Select.ValueText placeholder="Ülke" />
             </Select.Trigger>
-            <Select.IndicatorGroup>
-              <Select.Indicator />
-            </Select.IndicatorGroup>
+            <Select.IndicatorGroup><Select.Indicator /></Select.IndicatorGroup>
           </Select.Control>
           <Portal>
             <Select.Positioner>
-              <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
-                {countryOptions.items.map((c) => (
-                  <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
-                    {c.label}
+              <Select.Content bg={c.selectContentBg} color={c.selectContentText} borderColor={c.cardBorder} shadow="xl" borderRadius="md">
+                {countryOptions.items.map((item) => (
+                  <Select.Item item={item} key={item.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
+                    {item.label}
                     <Select.ItemIndicator />
                   </Select.Item>
                 ))}
@@ -273,6 +274,7 @@ export default function CustomerPage() {
         </Select.Root>
       </Stack>
 
+      {/* Tablo */}
       {isLoading ? (
         <Flex justify="center" py={20}>
           <Spinner size="lg" />
@@ -283,30 +285,29 @@ export default function CustomerPage() {
             overflowX="auto"
             borderWidth="1px"
             borderTopWidth="3px"
-            borderColor="gray.800"
+            borderColor={c.cardBorder}
             borderTopColor="green.400"
             borderRadius="xl"
-            bg="gray.900"
-            boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
+            bg={c.cardBg}
+            boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)"
           >
             <Table.Root
               size="sm"
               variant="outline"
               native
               css={{
-                "& tbody tr": {
-                  transition: "background-color 0.15s ease",
-                },
-                "& tbody tr:hover": {
-                  backgroundColor: "#111827",
-                },
+                "& tbody tr": { transition: "background-color 0.15s ease" },
+                "& tbody tr:hover": { backgroundColor: trHoverBg },
               }}
             >
-              <thead style={{ backgroundColor: "#111827" }}>
+              <thead style={{ backgroundColor: theadBg }}>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <th key={header.id} style={{ color: "#F3F4F6", borderBottom: "1px solid #1F2937", padding: "14px 16px", fontWeight: "600" }}>
+                      <th
+                        key={header.id}
+                        style={{ color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "14px 16px", fontWeight: "600" }}
+                      >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
                     ))}
@@ -315,9 +316,9 @@ export default function CustomerPage() {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} style={{ borderBottom: "1px solid #1F2937" }}>
+                  <tr key={row.id} style={{ borderBottom: `1px solid ${trBorder}` }}>
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} style={{ color: "#D1D5DB", padding: "14px 16px" }}>
+                      <td key={cell.id} style={{ color: tdColor, padding: "14px 16px" }}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -327,6 +328,7 @@ export default function CustomerPage() {
             </Table.Root>
           </Box>
 
+          {/* Pagination */}
           <Flex justify="center" mt={5}>
             <Pagination.Root
               count={customersResult?.total ?? 0}
@@ -335,35 +337,34 @@ export default function CustomerPage() {
               siblingCount={1}
               onPageChange={(details) => setPage(details.page)}
             >
-              <ButtonGroup variant="outline" size="sm" borderColor="gray.700" boxShadow="sm">
+              <ButtonGroup variant="outline" size="sm" borderColor={c.cardBorder} boxShadow="sm">
                 <Pagination.PrevTrigger asChild>
-                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronLeft /></IconButton>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}>
+                    <LuChevronLeft />
+                  </IconButton>
                 </Pagination.PrevTrigger>
 
                 <Pagination.Items
                   ellipsis={
                     <Box
-                      minW="9"
-                      h="9"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      bg="gray.900"
-                      color="gray.400"
+                      minW="9" h="9"
+                      display="flex" alignItems="center" justifyContent="center"
+                      bg={c.cardBg}
+                      color={c.subTextColor}
                       borderWidth="1px"
-                      borderColor="gray.700"
+                      borderColor={c.cardBorder}
                       borderRadius="md"
                     >
                       …
                     </Box>
                   }
                   render={(item) => (
-                    <IconButton 
+                    <IconButton
                       variant={{ base: "outline", _selected: "solid" }}
-                      bg={item.value === page ? "blue.600" : "gray.900"}
-                      color="white"
-                      borderColor="gray.700"
-                      _hover={{ bg: item.value === page ? "blue.700" : "gray.800" }}
+                      bg={item.value === page ? "blue.600" : c.cardBg}
+                      color={item.value === page ? "white" : c.headingColor}
+                      borderColor={c.cardBorder}
+                      _hover={{ bg: item.value === page ? "blue.700" : c.tableRowHover }}
                     >
                       {item.value}
                     </IconButton>
@@ -371,7 +372,9 @@ export default function CustomerPage() {
                 />
 
                 <Pagination.NextTrigger asChild>
-                  <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronRight /></IconButton>
+                  <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}>
+                    <LuChevronRight />
+                  </IconButton>
                 </Pagination.NextTrigger>
               </ButtonGroup>
             </Pagination.Root>
@@ -379,68 +382,57 @@ export default function CustomerPage() {
         </>
       )}
 
+      {/* Ekle / Düzenle Dialog */}
       <Dialog.Root open={isOpen} onOpenChange={(d) => setIsOpen(d.open)}>
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
+            <Dialog.Content bg={c.dialogBg} color={c.headingColor} borderColor={c.dialogBorder} borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title color="white">{editingCustomer ? "Müşteriyi Düzenle" : "Yeni Müşteri Ekle"}</Dialog.Title>
+                <Dialog.Title color={c.headingColor}>
+                  {editingCustomer ? "Müşteriyi Düzenle" : "Yeni Müşteri Ekle"}
+                </Dialog.Title>
               </Dialog.Header>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Dialog.Body>
-                  <Box mb={4}>
-                    <Field.Root invalid={!!errors.company_name}>
-                      <Field.Label color="gray.300">Şirket Adı</Field.Label>
-                      <Input {...register("company_name")} placeholder="Örn: Acme Corp" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.company_name?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
-
-                  <Box mb={4}>
-                    <Field.Root invalid={!!errors.contact_name}>
-                      <Field.Label color="gray.300">İletişim Kişisi</Field.Label>
-                      <Input {...register("contact_name")} placeholder="Örn: Ayşe Yılmaz" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.contact_name?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
-
-                  <Box mb={4}>
-                    <Field.Root invalid={!!errors.contact_title}>
-                      <Field.Label color="gray.300">Unvan</Field.Label>
-                      <Input {...register("contact_title")} placeholder="Örn: Satış Müdürü" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.contact_title?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
-
-                  <Box mb={4}>
-                    <Field.Root invalid={!!errors.city}>
-                      <Field.Label color="gray.300">Şehir</Field.Label>
-                      <Input {...register("city")} placeholder="Örn: İstanbul" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.city?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
-
-                  <Box mb={4}>
-                    <Field.Root invalid={!!errors.country}>
-                      <Field.Label color="gray.300">Ülke</Field.Label>
-                      <Input {...register("country")} placeholder="Örn: Türkiye" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.country?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
-
-                  <Box mb={2}>
-                    <Field.Root invalid={!!errors.phone}>
-                      <Field.Label color="gray.300">Telefon</Field.Label>
-                      <Input {...register("phone")} placeholder="Örn: 05551234567" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
-                      <Field.ErrorText color="red.400">{errors.phone?.message}</Field.ErrorText>
-                    </Field.Root>
-                  </Box>
+                  {[
+                    { field: "company_name" as const,  label: "Şirket Adı",       placeholder: "Örn: Acme Corp",       error: errors.company_name  },
+                    { field: "contact_name" as const,  label: "İletişim Kişisi",  placeholder: "Örn: Ayşe Yılmaz",    error: errors.contact_name  },
+                    { field: "contact_title" as const, label: "Unvan",            placeholder: "Örn: Satış Müdürü",   error: errors.contact_title },
+                    { field: "city" as const,          label: "Şehir",            placeholder: "Örn: İstanbul",        error: errors.city          },
+                    { field: "country" as const,       label: "Ülke",             placeholder: "Örn: Türkiye",         error: errors.country       },
+                    { field: "phone" as const,         label: "Telefon",          placeholder: "Örn: 05551234567",     error: errors.phone         },
+                  ].map(({ field, label, placeholder, error }, i, arr) => (
+                    <Box key={field} mb={i < arr.length - 1 ? 4 : 2}>
+                      <Field.Root invalid={!!error}>
+                        <Field.Label color={c.bodyText}>{label}</Field.Label>
+                        <Input
+                          {...register(field)}
+                          placeholder={placeholder}
+                          size="sm"
+                          bg={c.inputBg}
+                          borderColor={c.inputBorder}
+                          color={c.inputText}
+                          _placeholder={{ color: c.inputPlaceholder }}
+                        />
+                        <Field.ErrorText color="red.400">{error?.message}</Field.ErrorText>
+                      </Field.Root>
+                    </Box>
+                  ))}
                 </Dialog.Body>
 
                 <Dialog.Footer>
-                  <Button variant="outline" size="sm" mr={3} onClick={() => setIsOpen(false)} type="button" borderColor="gray.700" color="gray.300" _hover={{ bg: "gray.800" }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    mr={3}
+                    onClick={() => setIsOpen(false)}
+                    type="button"
+                    borderColor={c.cardBorder}
+                    color={c.bodyText}
+                    _hover={{ bg: c.tableRowHover }}
+                  >
                     İptal
                   </Button>
                   <Button
@@ -460,6 +452,7 @@ export default function CustomerPage() {
         </Portal>
       </Dialog.Root>
 
+      {/* Silme Onay Dialog */}
       <Dialog.Root
         open={customerToDelete !== null}
         onOpenChange={(details) => {
@@ -472,22 +465,23 @@ export default function CustomerPage() {
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
+            <Dialog.Content bg={c.dialogBg} color={c.headingColor} borderColor={c.dialogBorder} borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title color="white">Müşteriyi Sil</Dialog.Title>
+                <Dialog.Title color={c.headingColor}>Müşteriyi Sil</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                <Text color="gray.300">
-                  <strong style={{ color: "white" }}>{customerToDelete?.company_name}</strong> müşterisini silmek istediğinize emin misiniz?
+                <Text color={c.bodyText}>
+                  <strong style={{ color: c.headingColor }}>{customerToDelete?.company_name}</strong>{" "}
+                  müşterisini silmek istediğinize emin misiniz?
                 </Text>
               </Dialog.Body>
               <Dialog.Footer>
                 <Button
                   variant="outline"
                   size="sm"
-                  borderColor="gray.700"
-                  color="gray.300"
-                  _hover={{ bg: "gray.800" }}
+                  borderColor={c.cardBorder}
+                  color={c.bodyText}
+                  _hover={{ bg: c.tableRowHover }}
                   disabled={deleteCustomer.isPending}
                   onClick={() => setCustomerToDelete(null)}
                 >

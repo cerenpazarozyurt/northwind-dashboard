@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import {
   Box, Table, Button, Flex, Text, Input, Field, Dialog, Portal, Select, createListCollection, Spinner, Pagination, IconButton, ButtonGroup, Stack
@@ -13,6 +13,8 @@ import { useProductsData, useAddProduct, useDeleteProduct, PAGE_SIZE, Product, u
 import { getProductColumns } from "@/helpers/productColumns";
 import { productSchema, ProductFormValues } from "@/helpers/productSchema";
 import { toaster } from "@/components/ui/toaster";
+import { useColorModeValue } from "@/components/ui/color-mode";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 export default function ProductsPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +30,14 @@ export default function ProductsPage() {
   const addProduct = useAddProduct();
   const deleteProduct = useDeleteProduct();
   const updateProduct = useUpdateProduct();
+
+  const c = useThemeColors();
+  const theadBg   = useColorModeValue("#F9FAFB", "#111827");
+  const thColor   = useColorModeValue("#1F2937", "#F3F4F6");
+  const thBorder  = useColorModeValue("#E5E7EB", "#1F2937");
+  const tdColor   = useColorModeValue("#374151", "#D1D5DB");
+  const trBorder  = useColorModeValue("#E5E7EB", "#1F2937");
+  const trHoverBg = useColorModeValue("#F9FAFB", "#111827");
 
   function handleDeleteClick(product: Product) {
     setProductToDelete(product);
@@ -162,10 +172,10 @@ return (
         w="full"
       >
         <Box>
-          <Text fontSize="xl" fontWeight="semibold" color="white">
+          <Text fontSize="xl" fontWeight="semibold" color={c.headingColor}>
             Ürünler
           </Text>
-          <Text fontSize="sm" color="gray.400" mt={1}>
+          <Text fontSize="sm" color={c.subTextColor} mt={1}>
             {productsResult?.total ?? 0} ürün kaydı
           </Text>
         </Box>
@@ -189,7 +199,7 @@ return (
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
+              <Select.Trigger bg={c.inputBg} borderColor={c.inputBorder} color={c.inputText} borderRadius="lg">
                 <Select.ValueText placeholder="Kategori" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -198,9 +208,9 @@ return (
             </Select.Control>
             <Portal>
               <Select.Positioner>
-                <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
+                <Select.Content bg={c.selectContentBg} color={c.selectContentText} borderColor={c.cardBorder} shadow="xl" borderRadius="md">
                   {filterCategoryOptions.items.map((c) => (
-                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                    <Select.Item item={c} key={c.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
                       {c.label}
                       <Select.ItemIndicator />
                     </Select.Item>
@@ -219,7 +229,7 @@ return (
           >
             <Select.HiddenSelect />
             <Select.Control>
-              <Select.Trigger bg="gray.900" borderColor="gray.800" color="white" borderRadius="lg">
+              <Select.Trigger bg={c.inputBg} borderColor={c.inputBorder} color={c.inputText} borderRadius="lg">
                 <Select.ValueText placeholder="Sırala" />
               </Select.Trigger>
               <Select.IndicatorGroup>
@@ -228,9 +238,9 @@ return (
             </Select.Control>
             <Portal>
               <Select.Positioner>
-                <Select.Content bg="#0f172a" color="gray.150" borderColor="gray.800" shadow="xl" borderRadius="md">
+                <Select.Content bg={c.selectContentBg} color={c.selectContentText} borderColor={c.cardBorder} shadow="xl" borderRadius="md">
                   {sortOptions.items.map((s) => (
-                    <Select.Item item={s} key={s.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                    <Select.Item item={s} key={s.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
                       {s.label}
                       <Select.ItemIndicator />
                     </Select.Item>
@@ -273,11 +283,11 @@ return (
           overflowX="auto"
           borderWidth="1px"
           borderTopWidth="3px"
-          borderColor="gray.800"
+          borderColor={c.cardBorder}
           borderTopColor="orange.400"
           borderRadius="xl"
-          bg="gray.900"
-          boxShadow="0 10px 28px rgba(0, 0, 0, 0.35)"
+          bg={c.cardBg}
+          boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)"
         >
           <Table.Root
             size="sm"
@@ -288,15 +298,15 @@ return (
                 transition: "background-color 0.15s ease",
               },
               "& tbody tr:hover": {
-                backgroundColor: "#111827",
+                backgroundColor: trHoverBg,
               },
             }}
           >
-            <thead style={{ backgroundColor: "#111827" }}>
+            <thead style={{ backgroundColor: trHoverBg }}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} style={{ color: "#F3F4F6", borderBottom: "1px solid #1F2937", padding: "14px 16px", fontWeight: "600" }}>
+                    <th key={header.id} style={{ color: thColor, borderBottom: `1px solid ${thBorder}`, padding: "14px 16px", fontWeight: "600" }}>
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
@@ -305,9 +315,9 @@ return (
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} style={{ borderBottom: "1px solid #1F2937" }}>
+                <tr key={row.id} style={{ borderBottom: `1px solid ${trBorder}` }}>
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} style={{ color: "#D1D5DB", padding: "14px 16px" }}>
+                    <td key={cell.id} style={{ color: tdColor, padding: "14px 16px" }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -325,9 +335,9 @@ return (
             siblingCount={1}
             onPageChange={(details) => setPage(details.page)}
           >
-          <ButtonGroup variant="outline" size="sm" borderColor="gray.700" boxShadow="sm">
+          <ButtonGroup variant="outline" size="sm" borderColor={c.cardBorder} boxShadow="sm">
             <Pagination.PrevTrigger asChild>
-              <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronLeft /></IconButton>
+              <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronLeft /></IconButton>
             </Pagination.PrevTrigger>
         
             <Pagination.Items
@@ -338,10 +348,10 @@ return (
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
-                  bg="gray.900"
-                  color="gray.400"
+                  bg={c.cardBg}
+                  color={c.subTextColor}
                   borderWidth="1px"
-                  borderColor="gray.700"
+                  borderColor={c.cardBorder}
                   borderRadius="md"
                 >
                   …
@@ -350,10 +360,10 @@ return (
               render={(item) => (
                 <IconButton 
                   variant={{ base: "outline", _selected: "solid" }}
-                  bg={item.value === page ? "blue.600" : "gray.900"}
-                  color="white"
-                  borderColor="gray.700"
-                  _hover={{ bg: item.value === page ? "blue.700" : "gray.800" }}
+                  bg={item.value === page ? "blue.600" : c.cardBg}
+                  color={item.value === page ? "white" : c.headingColor}
+                  borderColor={c.cardBorder}
+                  _hover={{ bg: item.value === page ? "blue.700" : c.tableRowHover }}
                 >
                   {item.value}
                 </IconButton>
@@ -361,7 +371,7 @@ return (
             />
         
             <Pagination.NextTrigger asChild>
-              <IconButton bg="gray.900" color="white" borderColor="gray.700" _hover={{ bg: "gray.800" }}><LuChevronRight /></IconButton>
+              <IconButton bg={c.cardBg} color={c.headingColor} borderColor={c.cardBorder} _hover={{ bg: c.tableRowHover }}><LuChevronRight /></IconButton>
             </Pagination.NextTrigger>
           </ButtonGroup>
           </Pagination.Root>
@@ -380,24 +390,24 @@ return (
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
+            <Dialog.Content bg={c.dialogBg} color={c.headingColor} borderColor={c.dialogBorder} borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title color="white">{productToEdit ? "Ürünü Düzenle" : "Yeni Ürün Ekle"}</Dialog.Title>
+                <Dialog.Title color={c.headingColor}>{productToEdit ? "Ürünü Düzenle" : "Yeni Ürün Ekle"}</Dialog.Title>
               </Dialog.Header>
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Dialog.Body>
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.product_name}>
-                      <Field.Label color="gray.300">Ürün Adı</Field.Label>
-                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.Label color={c.bodyText}>Ürün Adı</Field.Label>
+                      <Input {...register("product_name")} placeholder="Örn: Chai" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.product_name?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
 
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.category_id}>
-                      <Field.Label color="gray.300">Kategori</Field.Label>
+                      <Field.Label color={c.bodyText}>Kategori</Field.Label>
                       <Controller
                         name="category_id"
                         control={control}
@@ -410,7 +420,7 @@ return (
                           >
                             <Select.HiddenSelect />
                             <Select.Control>
-                              <Select.Trigger bg="white" borderColor="gray.300" color="gray.900">
+                              <Select.Trigger bg="white" bordercolor={c.bodyText} color="gray.900">
                                 <Select.ValueText placeholder="Kategori seç" />
                               </Select.Trigger>
                               <Select.IndicatorGroup>
@@ -419,9 +429,9 @@ return (
                             </Select.Control>
                             <Portal>
                               <Select.Positioner>
-                                <Select.Content bg="white" color="gray.900" borderColor="gray.300" shadow="xl" borderRadius="md">
+                                <Select.Content bg="white" color="gray.900" bordercolor={c.bodyText} shadow="xl" borderRadius="md">
                                   {categoryOptions.items.map((c) => (
-                                    <Select.Item item={c} key={c.value} _hover={{ bg: "gray.800", color: "white" }} cursor="pointer">
+                                    <Select.Item item={c} key={c.value} _hover={{ bg: c.selectItemHoverBg, color: c.selectItemHoverText }} cursor="pointer">
                                       {c.label}
                                       <Select.ItemIndicator />
                                     </Select.Item>
@@ -438,23 +448,23 @@ return (
 
                   <Box mb={4}>
                     <Field.Root invalid={!!errors.unit_price}>
-                      <Field.Label color="gray.300">Birim Fiyatı</Field.Label>
-                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.Label color={c.bodyText}>Birim Fiyatı</Field.Label>
+                      <Input {...register("unit_price")} type="number" step="0.01" placeholder="0.00" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.unit_price?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
 
                   <Box mb={2}>
                     <Field.Root invalid={!!errors.units_in_stock}>
-                      <Field.Label color="gray.300">Stok Miktarı</Field.Label>
-                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" bg="white" borderColor="gray.300" color="gray.900" _placeholder={{ color: "gray.500" }} />
+                      <Field.Label color={c.bodyText}>Stok Miktarı</Field.Label>
+                      <Input {...register("units_in_stock")} type="number" placeholder="0" size="sm" bg="white" bordercolor={c.bodyText} color="gray.900" _placeholder={{ color: "gray.500" }} />
                       <Field.ErrorText color="red.400">{errors.units_in_stock?.message}</Field.ErrorText>
                     </Field.Root>
                   </Box>
                 </Dialog.Body>
 
                 <Dialog.Footer>
-                  <Button variant="outline" size="sm" mr={3} onClick={() => setIsOpen(false)} type="button" borderColor="gray.700" color="gray.300" _hover={{ bg: "gray.800" }}>
+                  <Button variant="outline" size="sm" mr={3} onClick={() => setIsOpen(false)} type="button" borderColor="gray.700" color={c.bodyText} _hover={{ bg: "gray.800" }}>
                     İptal
                   </Button>
                   <Button
@@ -486,13 +496,13 @@ return (
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content bg="#0f172a" color="gray.100" borderColor="gray.800" borderWidth="1px" shadow="2xl">
+            <Dialog.Content bg={c.dialogBg} color={c.headingColor} borderColor={c.dialogBorder} borderWidth="1px" shadow="2xl">
               <Dialog.Header>
-                <Dialog.Title color="white">Ürünü Sil</Dialog.Title>
+                <Dialog.Title color={c.headingColor}>Ürünü Sil</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                <Text color="gray.300">
-                  <strong style={{ color: "white" }}>{productToDelete?.product_name}</strong> ürününü silmek istediğinize emin misiniz?
+                <Text color={c.bodyText}>
+                  <strong style={{ color: c.headingColor }}>{productToDelete?.product_name}</strong> ürününü silmek istediğinize emin misiniz?
                 </Text>
               </Dialog.Body>
               <Dialog.Footer>
@@ -500,7 +510,7 @@ return (
                   variant="outline"
                   size="sm"
                   borderColor="gray.700"
-                  color="gray.300"
+                  color={c.bodyText}
                   _hover={{ bg: "gray.800" }}
                   disabled={deleteProduct.isPending}
                   onClick={() => setProductToDelete(null)}
