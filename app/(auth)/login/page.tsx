@@ -17,7 +17,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // 1. Supabase ile giriş yapma denemesi
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
@@ -30,6 +31,27 @@ export default function LoginPage() {
         });
         setIsLoading(false);
         return;
+      }
+
+      // 2. Kullanıcı giriş yaptı ama E-posta Onaylı mı? Kontrol edelim:
+      if (authData.user) {
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("is_verified")
+          .eq("id", authData.user.id)
+          .single();
+
+        if (profileError || !profile?.is_verified) {
+          // Onaylı değilse oturumu hemen kapat ve engelle
+          await supabase.auth.signOut();
+          toaster.create({
+            title: "Hesap Onaylanmadı",
+            description: "Lütfen e-postanıza gelen bağlantı ile hesabınızı onaylayın.",
+            type: "error",
+          });
+          setIsLoading(false);
+          return;
+        }
       }
 
       toaster.create({
@@ -133,6 +155,11 @@ export default function LoginPage() {
                     {errors.password.message}
                   </Text>
                 )}
+                <Flex justify="flex-end" mt={1}>
+                  <Link href="/forgot-password" style={{ fontSize: "12px", color: "#3B82F6", fontWeight: 500 }}>
+                    Şifrenizi mi unuttunuz?
+                  </Link>
+                </Flex>
               </Box>
 
               <Button
