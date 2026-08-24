@@ -8,14 +8,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, firstName, token } = body;
 
-    // Fonksiyondan doğrudan HTML string'ini alıyoruz
+    //EmailTemplate bileşenine firstName ve token bilgilerini vererek dinamik bir HTML string'i üretir.
     const htmlContent = EmailTemplate({ firstName, token });
 
     const { data, error } = await resend.emails.send({
       from: 'Northwind Traders <onboarding@resend.dev>',
       to: [email],
       subject: 'Northwind Hesabınızı Doğrulayın',
-      html: htmlContent, // Resend'e html parametresiyle veriyoruz
+      html: htmlContent, 
     });
 
     if (error) {

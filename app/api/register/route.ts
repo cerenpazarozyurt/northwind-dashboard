@@ -1,8 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { EmailTemplate } from "@/components/email-template";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Service role key: RLS'i bypass eder, sadece server-side kullanılır
 const supabaseAdmin = createClient(
@@ -15,16 +11,17 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password, firstName, lastName } = body;
 
+    // Gelen bilgilerde eksik var mı kontrolü
     if (!email || !password || !firstName || !lastName) {
       return Response.json({ error: "Eksik alanlar var." }, { status: 400 });
     }
 
-    // 1. Auth kullanıcısı oluştur
+    // 1. Auth kullanıcısı oluşturup id alıyoruz.
     const { data: authData, error: signUpError } =
       await supabaseAdmin.auth.admin.createUser({
         email,
         password,
-        email_confirm: true, // Supabase'in kendi email onayını devre dışı bırak, bizimkini kullanıyoruz
+        email_confirm: true, // Supabase'in kendi email onayını devre dışı bırakıyoruz
       });
 
     if (signUpError || !authData.user) {
@@ -37,7 +34,7 @@ export async function POST(request: Request) {
     const userId = authData.user.id;
     const verificationToken = crypto.randomUUID();
 
-    // 2. Profil oluştur
+    // 2. id'yi kullanarak profiles tablosuna kaydediyoruz.
     const { error: profileError } = await supabaseAdmin.from("profiles").insert({
       id: userId,
       first_name: firstName,
@@ -55,18 +52,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Doğrulama e-postasını gönder
-    const htmlContent = EmailTemplate({ firstName, token: verificationToken });
+    // 3. Doğrulama e-postasını göndermek için api/send rotamızı tetikliyoruz
+    try {
+      const host = request.headers.get("host") || "localhost:3000";
+      const protocol = host.includes("localhost") ? "http" : "https";
 
-    const { error: emailError } = await resend.emails.send({
-      from: "Northwind Traders <onboarding@resend.dev>",
-      to: [email],
-      subject: "Northwind Hesabınızı Doğrulayın",
-      html: htmlContent,
-    });
+      const emailRes = await fetch(`${protocol}://${host}/api/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          firstName,
+          token: verificationToken,
+        }),
+      });
 
-    if (emailError) {
-      // Email gönderilemezse hem profil hem auth user'ı sil (tam rollback)
+      if (!emailRes.ok) {
+        throw new Error("Mail servisi hata döndürdü.");
+      }
+    } catch (emailErr) {
+      // Email gönderilemezse veya api/send patlarsa hem profil hem auth user'ı sil
       await supabaseAdmin.from("profiles").delete().eq("id", userId);
       await supabaseAdmin.auth.admin.deleteUser(userId);
       return Response.json(

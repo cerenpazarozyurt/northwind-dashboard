@@ -41,6 +41,7 @@ export default function RegisterPage() {
 
       const result = await res.json();
 
+      //apiye ulaştı ama api çalışırken sorun oluştu.
       if (!res.ok || result.error) {
         toaster.create({
           title: "Kayıt Başarısız",
@@ -54,6 +55,7 @@ export default function RegisterPage() {
       setSentEmail(data.email);
       setEmailSent(true);
 
+    //sunucuya hiç ulaşamadı veya sunucu tamamen çöktü.
     } catch {
       toaster.create({
         title: "Kayıt Başarısız",

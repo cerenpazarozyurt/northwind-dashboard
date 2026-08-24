@@ -24,6 +24,7 @@ export default function VerifyPage() {
       }
 
       try {
+        // 1. Veritabanında token'ı ara
         const { data: profile, error: fetchError } = await supabase
           .from("profiles")
           .select("id, is_verified")
@@ -36,12 +37,13 @@ export default function VerifyPage() {
           return;
         }
 
+        //Eğer henüz onaylanmamışsa onayla
         if (!profile.is_verified) {
           const { error: updateError } = await supabase
             .from("profiles")
             .update({
               is_verified: true,
-              verification_token: null,
+              verification_token: null, //Token bir kez kullanıldıği için temizlenir
             })
             .eq("id", profile.id);
 
@@ -66,12 +68,11 @@ export default function VerifyPage() {
   useEffect(() => {
     if (status !== "success") return;
 
-    // Redirect: 3 saniye sonra login'e git (setCountdown dışında)
     const redirectTimer = setTimeout(() => {
       router.push("/login");
     }, 3000);
 
-    // Countdown: her saniye 1 azalt (sadece görsel)
+    // Countdown: her saniye 1 azalt 
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => Math.max(0, prev - 1));
     }, 1000);
