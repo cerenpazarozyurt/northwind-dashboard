@@ -10,7 +10,7 @@ import { Toaster } from "./toaster"
 export function Provider({ children, ...rest }: ColorModeProviderProps) {
   return (
     <ChakraProvider value={defaultSystem}>
-      <ColorModeProvider defaultTheme="dark" {...rest}>
+      <ColorModeProvider defaultTheme="light" {...rest}>
         {children}
         <Toaster />
       </ColorModeProvider>

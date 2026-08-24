@@ -84,7 +84,7 @@ export default function VerifyPage() {
   }, [status, router]);
 
   return (
-    <Flex minH="100vh" align="center" justify="center" bg="#0B1120" p={4}>
+    <Flex minH="100vh" align="center" justify="center" bg="linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 50%, #F5F3FF 100%)" p={4}>
       <Box
         w="full"
         maxW="420px"
@@ -93,7 +93,7 @@ export default function VerifyPage() {
         borderRadius="2xl"
         borderWidth="1px"
         borderColor="gray.200"
-        boxShadow="0 24px 60px rgba(0, 0, 0, 0.35)"
+        boxShadow="0 8px 40px rgba(59, 130, 246, 0.10), 0 2px 8px rgba(0,0,0,0.06)"
         textAlign="center"
       >
         {status === "loading" && (

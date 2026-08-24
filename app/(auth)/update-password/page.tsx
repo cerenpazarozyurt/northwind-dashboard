@@ -53,8 +53,8 @@ export default function UpdatePasswordPage() {
     };
 
   return (
-    <Flex minH="100vh" align="center" justify="center" bg="#0B1120" p={{ base: 4, md: 8 }}>
-      <Box w="full" maxW="420px" bg="white" p={{ base: 6, md: 8 }} borderRadius="2xl" borderWidth="1px" borderColor="gray.200" boxShadow="0 24px 60px rgba(0, 0, 0, 0.35)">
+    <Flex minH="100vh" align="center" justify="center" bg="linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 50%, #F5F3FF 100%)" p={{ base: 4, md: 8 }}>
+      <Box w="full" maxW="420px" bg="white" p={{ base: 6, md: 8 }} borderRadius="2xl" borderWidth="1px" borderColor="gray.200" boxShadow="0 8px 40px rgba(59, 130, 246, 0.10), 0 2px 8px rgba(0,0,0,0.06)">
         <Box textAlign="center" mb={8}>
           <Text fontSize="md" fontWeight="bold" color="gray.900">Northwind Traders</Text>
           <Text fontSize="xs" color="gray.500">Yeni Şifre Belirleme</Text>
