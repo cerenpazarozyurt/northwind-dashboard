@@ -5,7 +5,7 @@ import { Box, VStack, HStack, Text, Link as ChakraLink, IconButton } from "@chak
 import { Drawer } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, Package, Menu, X, Users } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, Menu, X, Users, Map } from "lucide-react";
 import { useColorModeValue } from "@/components/ui/color-mode";
 
 const links = [
@@ -13,6 +13,7 @@ const links = [
   { href: "/orders",    label: "Siparişler", icon: ShoppingCart },
   { href: "/products",  label: "Ürünler",    icon: Package },
   { href: "/customers", label: "Müşteriler", icon: Users },
+  { href: "/analytics", label: "Bölge Analizi", icon: Map },
 ];
 
 export function Sidebar() {
