@@ -1,137 +1,137 @@
 ﻿# 🧭 Northwind Dashboard
 
-A modern, full-stack business intelligence dashboard built with **Next.js 16**, **Supabase**, and **Chakra UI**. Inspired by the classic Northwind database, this application provides real-time insights into orders, products, customers, and regional sales analytics — all wrapped in a polished, responsive UI with dark mode support.
+**Next.js 16**, **Supabase** ve **Chakra UI** ile geliştirilmiş modern, full-stack bir iş zekası panelidir. Klasik Northwind veritabanından ilham alınarak oluşturulan bu uygulama; siparişler, ürünler, müşteriler ve bölgesel satış analizleri hakkında gerçek zamanlı içgörüler sunar. Şık, duyarlı bir arayüz ve karanlık mod desteğiyle birlikte gelir.
 
 ---
 
-## 📸 Preview
+## 📸 Önizleme
 
 ### Dashboard
 ![Dashboard](screenshot/dashboard.png)
 
-### Orders
-![Orders](screenshot/orders.png)
+### Siparişler
+![Siparişler](screenshot/orders.png)
 
-### Order Detail Modal
-![Order Detail](screenshot/orders_detail.png)
+### Sipariş Detayı
+![Sipariş Detayı](screenshot/orders_detail.png)
 
-### Products
-![Products](screenshot/products.png)
+### Ürünler
+![Ürünler](screenshot/products.png)
 
-### Customers
-![Customers](screenshot/customers.png)
+### Müşteriler
+![Müşteriler](screenshot/customers.png)
 
-### Region Analytics — Light Mode
-![Analytics Light](screenshot/analytics.png)
+### Bölge Analizi — Açık Tema
+![Bölge Analizi Açık](screenshot/analytics.png)
 
-### Region Analytics — Dark Mode
-![Analytics Dark](screenshot/analytics_dark.png)
+### Bölge Analizi — Koyu Tema
+![Bölge Analizi Koyu](screenshot/analytics_dark.png)
 
-### Authentication
-| Login | Register |
-|-------|----------|
-| ![Login](public/screenshot_login.png) | ![Register](public/screenshot_register.png) |
+### Kimlik Doğrulama
+| Giriş Yap | Kayıt Ol |
+|-----------|----------|
+| ![Giriş](public/screenshot_login.png) | ![Kayıt](public/screenshot_register.png) |
 
-### Email Verification Flow
-| Check Your Inbox | Verification Email | Account Confirmed |
-|------------------|--------------------|-------------------|
-| ![Email Check](screenshot/email1.png) | ![Email Content](screenshot/email2.png) | ![Confirmed](screenshot/email3.png) |
+### E-posta Doğrulama Akışı
+| Gelen Kutusu Bildirimi | Doğrulama E-postası | Hesap Onaylandı |
+|------------------------|---------------------|-----------------|
+| ![E-posta Bildir](screenshot/email1.png) | ![E-posta İçerik](screenshot/email2.png) | ![Onaylandı](screenshot/email3.png) |
 
-### Password Reset
-| Forgot Password | Set New Password |
-|-----------------|-----------------|
-| ![Forgot Password](screenshot/sifre.png) | ![New Password](screenshot/sifre2.png) |
+### Şifre Sıfırlama
+| Şifremi Unuttum | Yeni Şifre Belirle |
+|-----------------|-------------------|
+| ![Şifremi Unuttum](screenshot/sifre.png) | ![Yeni Şifre](screenshot/sifre2.png) |
 
 ---
 
-## ✨ Features
+## ✨ Özellikler
 
 ### 📊 Dashboard
-- KPI summary cards: **Total Revenue**, **Order Count**, **Customer Count**, **Active Products**
-- **Monthly Revenue** bar chart (Highcharts) with year filter (1996 / 1997 / 1998 / All)
-- **Top Countries by Sales** interactive pie chart
-- Fully theme-aware charts (dark / light mode tooltips, axis labels, backgrounds)
+- KPI özet kartları: **Toplam Ciro**, **Sipariş Sayısı**, **Müşteri Sayısı**, **Aktif Ürün Sayısı**
+- Yıl filtresiyle **Aylık Ciro** bar grafiği (1996 / 1997 / 1998 / Tümü)
+- **En Çok Satış Yapılan Ülkeler** interaktif pasta grafiği
+- Tüm grafiklerin renk temasına tam uyum (araç ipucu, eksen etiketleri, arka plan)
 
-### 📦 Orders
-- Paginated, searchable orders table powered by **TanStack Table**
-- Filter by **country** and **search term** (URL-state persisted via `nuqs`)
-- Click any row to open an **order detail modal** with line items, discounts, and totals
-- Sortable columns with smooth transitions
+### 📦 Siparişler
+- **TanStack Table** ile sayfalandırılmış, aranabilir sipariş tablosu
+- **Ülke** ve **müşteri kodu** bazlı filtreleme (`nuqs` ile URL'de korunan durum)
+- Herhangi bir satıra tıklayarak kalemleri, indirimleri ve toplamı gösteren **sipariş detay modali**
+- Düzgün geçişlerle sıralanabilir sütunlar
 
-### 🛍️ Products
-- Full **CRUD** operations: Create, Read, Update, Delete
-- Filter by **category** and sort by name (asc / desc)
-- Confirmation dialog before deletion
-- Form validation with **React Hook Form** + **Zod**
-- Toast notifications on every mutation
+### 🛍️ Ürünler
+- Tam **CRUD** işlemleri: Oluştur, Listele, Güncelle, Sil
+- **Kategori** bazlı filtreleme ve ada göre sıralama (artan / azalan)
+- Silme işlemi öncesi onay diyalogu
+- **React Hook Form** + **Zod** ile form doğrulama
+- Her veri değişiminde toast bildirimleri
 
-### 👥 Customers
-- Full **CRUD** operations for customer records
-- Search by **company name**, filter by **city** and **country**
-- URL-state pagination — links are shareable and back-button friendly
+### 👥 Müşteriler
+- Müşteri kayıtları için tam **CRUD** işlemleri
+- **Şirket adı** araması, **şehir** ve **ülke** filtresi
+- Paylaşılabilir ve geri tuşuyla uyumlu URL tabanlı sayfalandırma
 
-### 🗺️ Region Analytics
-- **Interactive world map** (Highcharts Maps + Highmaps topology)
-- Colour-coded order density by country
-- Tooltips showing order count and average shipping duration per country
-- Built-in zoom, pan, and tooltip interactions
-- Glassmorphism card wrapper with full dark / light mode support
+### 🗺️ Bölge Analizi
+- **İnteraktif dünya haritası** (Highcharts Maps + Highmaps topolojisi)
+- Ülke bazlı sipariş yoğunluğu renk kodlaması
+- Her ülke için sipariş sayısı ve ortalama kargo süresi gösterimli araç ipuçları
+- Yakınlaştırma, kaydırma ve etkileşimli harita desteği
+- Glassmorphism kart sarmalayıcı ile tam tema uyumu
 
-### 🔐 Authentication
-- **Supabase Auth** (email + password)
-- Register, Login, Forgot Password, Email Verification, Update Password flows
-- Branded transactional emails sent via **Resend**
-- **Route protection** via Next.js Middleware — unauthenticated users are redirected to `/login`
-- Authenticated users are redirected away from `/login` and `/register`
+### 🔐 Kimlik Doğrulama
+- **Supabase Auth** (e-posta + şifre)
+- Kayıt Ol, Giriş Yap, Şifre Unut, E-posta Doğrulama, Şifre Güncelleme akışları
+- **Resend** aracılığıyla gönderilen markalı işlem e-postaları
+- Next.js Middleware ile **rota koruması** — doğrulanmamış kullanıcılar `/login` adresine yönlendirilir
+- Giriş yapmış kullanıcılar `/login` ve `/register` sayfalarına erişemez
 
-### 🌗 Dark / Light Mode
-- System preference detection on first load
-- Manual toggle persisted across sessions via `next-themes`
-- All Chakra UI components and custom charts respect the active theme
+### 🌗 Koyu / Açık Tema
+- İlk yüklemede sistem tercihi algılama
+- `next-themes` aracılığıyla oturumlar arasında kalıcı manuel geçiş
+- Tüm Chakra UI bileşenleri ve özel grafikler aktif temayı yansıtır
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Teknoloji Yığını
 
-| Layer | Technology |
-|-------|-----------|
+| Katman | Teknoloji |
+|--------|-----------|
 | **Framework** | [Next.js 16](https://nextjs.org) (App Router) |
-| **Language** | TypeScript 5 |
-| **UI Library** | [Chakra UI v3](https://chakra-ui.com) |
-| **Database / Auth** | [Supabase](https://supabase.com) (PostgreSQL + Auth + SSR helpers) |
-| **Data Fetching** | [TanStack Query v5](https://tanstack.com/query) |
-| **Tables** | [TanStack Table v8](https://tanstack.com/table) |
-| **Charts** | [Highcharts 13](https://highcharts.com) + Highcharts Maps |
-| **Forms** | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev) |
-| **URL State** | [nuqs](https://nuqs.47ng.com) |
-| **Email** | [Resend](https://resend.com) |
-| **Icons** | [Lucide React](https://lucide.dev) + [React Icons](https://react-icons.github.io/react-icons/) |
-| **Styling** | Tailwind CSS v4 + Chakra UI tokens |
-| **Theme** | [next-themes](https://github.com/pacocoursey/next-themes) |
+| **Dil** | TypeScript 5 |
+| **UI Kütüphanesi** | [Chakra UI v3](https://chakra-ui.com) |
+| **Veritabanı / Kimlik Doğrulama** | [Supabase](https://supabase.com) (PostgreSQL + Auth + SSR yardımcıları) |
+| **Veri Çekme** | [TanStack Query v5](https://tanstack.com/query) |
+| **Tablolar** | [TanStack Table v8](https://tanstack.com/table) |
+| **Grafikler** | [Highcharts 13](https://highcharts.com) + Highcharts Maps |
+| **Formlar** | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev) |
+| **URL Durumu** | [nuqs](https://nuqs.47ng.com) |
+| **E-posta** | [Resend](https://resend.com) |
+| **İkonlar** | [Lucide React](https://lucide.dev) + [React Icons](https://react-icons.github.io/react-icons/) |
+| **Stil** | Tailwind CSS v4 + Chakra UI token'ları |
+| **Tema** | [next-themes](https://github.com/pacocoursey/next-themes) |
 
 ---
 
-## 🗂️ Project Structure
+## 🗂️ Proje Yapısı
 
 ```
 northwind/
 ├── app/
-│   ├── (auth)/               # Auth pages (login, register, forgot-password, …)
-│   ├── api/                  # API routes (user registration, email send)
-│   ├── dashboard/            # KPI cards + revenue charts
-│   ├── orders/               # Orders table + detail modal
-│   ├── products/             # Products CRUD table
-│   ├── customers/            # Customers CRUD table
-│   ├── analytics/            # Interactive world map
-│   ├── layout.tsx            # Root layout (providers, sidebar, navbar)
+│   ├── (auth)/               # Kimlik doğrulama sayfaları (login, register, forgot-password, …)
+│   ├── api/                  # API rotaları (kullanıcı kaydı, e-posta gönderimi)
+│   ├── dashboard/            # KPI kartları + gelir grafikleri
+│   ├── orders/               # Sipariş tablosu + detay modali
+│   ├── products/             # Ürün CRUD tablosu
+│   ├── customers/            # Müşteri CRUD tablosu
+│   ├── analytics/            # İnteraktif dünya haritası
+│   ├── layout.tsx            # Kök düzen (sağlayıcılar, kenar çubuğu, navbar)
 │   └── globals.css
 ├── components/
 │   ├── layout/
-│   │   ├── sidebar.tsx       # Responsive sidebar (desktop + mobile drawer)
-│   │   └── navbar.tsx        # Top navbar with theme toggle
-│   ├── RegionMap.tsx         # Highcharts Maps component
-│   └── ui/                   # Chakra UI primitives & colour-mode helpers
-├── hooks/                    # Data-fetching hooks (TanStack Query)
+│   │   ├── sidebar.tsx       # Duyarlı kenar çubuğu (masaüstü + mobil drawer)
+│   │   └── navbar.tsx        # Tema geçişli üst navbar
+│   ├── RegionMap.tsx         # Highcharts Maps bileşeni
+│   └── ui/                   # Chakra UI ilkeleri ve renk modu yardımcıları
+├── hooks/                    # Veri çekme hook'ları (TanStack Query)
 │   ├── useDashboardData.ts
 │   ├── useOrdersData.ts
 │   ├── useOrderDetail.ts
@@ -139,139 +139,139 @@ northwind/
 │   ├── useCustomersData.ts
 │   ├── useRegionData.ts
 │   └── useThemeColors.ts
-├── helpers/                  # Pure helpers, column defs, Zod schemas
-├── middleware.ts             # Route protection (Supabase SSR)
-└── utils/                   # Supabase client helpers (server / client)
+├── helpers/                  # Saf yardımcılar, sütun tanımları, Zod şemaları
+├── middleware.ts             # Rota koruması (Supabase SSR)
+└── utils/                   # Supabase istemci yardımcıları (sunucu / istemci)
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Başlangıç
 
-### Prerequisites
+### Gereksinimler
 
 - **Node.js** >= 18
-- A [Supabase](https://supabase.com) project with the Northwind schema loaded
-- A [Resend](https://resend.com) account (for email flows)
+- Northwind şeması yüklenmiş bir [Supabase](https://supabase.com) projesi
+- E-posta akışları için bir [Resend](https://resend.com) hesabı
 
-### 1 — Clone the repository
+### 1 — Depoyu klonlayın
 
 ```bash
-git clone https://github.com/your-username/northwind-dashboard.git
+git clone https://github.com/kullanici-adiniz/northwind-dashboard.git
 cd northwind-dashboard
 ```
 
-### 2 — Install dependencies
+### 2 — Bağımlılıkları yükleyin
 
 ```bash
 npm install
 ```
 
-### 3 — Configure environment variables
+### 3 — Ortam değişkenlerini yapılandırın
 
-Create a `.env.local` file in the project root:
+Proje kök dizininde `.env.local` dosyası oluşturun:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
-SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
-RESEND_API_KEY=<your-resend-api-key>
+NEXT_PUBLIC_SUPABASE_URL=https://<proje-referansiniz>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-anahtariniz>
+SUPABASE_SERVICE_ROLE_KEY=<servis-rol-anahtariniz>
+RESEND_API_KEY=<resend-api-anahtariniz>
 ```
 
-> **Warning:** Never commit `.env.local` to version control. It is already listed in `.gitignore`.
+> **Uyarı:** `.env.local` dosyasını asla versiyon kontrolüne eklemeyin. Zaten `.gitignore` dosyasına dahil edilmiştir.
 
-### 4 — Run the development server
+### 4 — Geliştirme sunucusunu başlatın
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser. You will be redirected to `/login` automatically.
+Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın. Otomatik olarak `/login` sayfasına yönlendirileceksiniz.
 
 ---
 
-## 🗄️ Database
+## 🗄️ Veritabanı
 
-This project uses the classic **Northwind** dataset loaded into a Supabase (PostgreSQL) project. The main tables are:
+Bu proje, bir Supabase (PostgreSQL) projesine yüklenmiş klasik **Northwind** veri setini kullanmaktadır. Temel tablolar:
 
-| Table | Description |
-|-------|-------------|
-| `orders` | Sales orders with customer, employee, and freight data |
-| `order_details` | Line items (product, quantity, unit price, discount) |
-| `products` | Product catalogue with categories and pricing |
-| `customers` | Customer company records with address details |
-| `categories` | Product categories |
-| `shippers` | Freight / shipping companies |
-
----
-
-## 📜 Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start the development server (webpack) |
-| `npm run build` | Create a production build |
-| `npm run start` | Serve the production build |
-| `npm run lint` | Run ESLint |
+| Tablo | Açıklama |
+|-------|----------|
+| `orders` | Müşteri, çalışan ve kargo bilgilerini içeren satış siparişleri |
+| `order_details` | Sipariş kalemleri (ürün, adet, birim fiyat, indirim) |
+| `products` | Kategori ve fiyatlandırma bilgilerini içeren ürün kataloğu |
+| `customers` | Adres bilgileriyle birlikte müşteri şirket kayıtları |
+| `categories` | Ürün kategorileri |
+| `shippers` | Kargo / nakliye şirketleri |
 
 ---
 
-## 🔒 Authentication Flow
+## 📜 Kullanılabilir Komutlar
+
+| Komut | Açıklama |
+|-------|----------|
+| `npm run dev` | Geliştirme sunucusunu başlatır (webpack) |
+| `npm run build` | Production derlemesi oluşturur |
+| `npm run start` | Production derlemesini sunar |
+| `npm run lint` | ESLint çalıştırır |
+
+---
+
+## 🔒 Kimlik Doğrulama Akışı
 
 ```
-User visits /dashboard
+Kullanıcı /dashboard adresini ziyaret eder
        |
        v
   middleware.ts
-  +------------------------+
-  | Is user authenticated? |
-  +------------------------+
-       | No                   Yes
-       v                       v
-  Redirect --> /login      Allow access
+  +-----------------------------+
+  | Kullanıcı giriş yapmış mı? |
+  +-----------------------------+
+       | Hayır                  Evet
+       v                          v
+  /login adresine yönlendir   Erişime izin ver
        |
        v
-  Login / Register / Forgot Password
+  Giriş / Kayıt / Şifre Sıfırlama
        |
        v
-  Supabase Auth (email + password)
+  Supabase Auth (e-posta + şifre)
        |
        v
-  Email verification (Resend)
+  E-posta doğrulaması (Resend)
        |
        v
-  Redirect --> /dashboard
+  /dashboard adresine yönlendir
 ```
 
 ---
 
-## 🌐 Deployment
+## 🌐 Dağıtım
 
-The easiest way to deploy is via **[Vercel](https://vercel.com)**:
+En kolay dağıtım yöntemi **[Vercel](https://vercel.com)** üzerindendir:
 
-1. Push your repository to GitHub.
-2. Import the project on [vercel.com/new](https://vercel.com/new).
-3. Add all environment variables from `.env.local` in the Vercel dashboard.
-4. Deploy — Vercel auto-detects Next.js and configures the build.
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome! For significant changes, please open an issue first to discuss what you would like to change.
-
-1. Fork the repo
-2. Create your branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -m 'feat: add my feature'`
-4. Push: `git push origin feature/my-feature`
-5. Open a Pull Request
+1. Deponuzu GitHub'a gönderin.
+2. Projeyi [vercel.com/new](https://vercel.com/new) adresinden içe aktarın.
+3. Vercel panosunda `.env.local` dosyasındaki tüm ortam değişkenlerini ekleyin.
+4. Dağıtın — Vercel, Next.js'i otomatik olarak algılar ve derlemeyi yapılandırır.
 
 ---
 
-## 📄 License
+## 🤝 Katkıda Bulunma
 
-This project is open source and available under the [MIT License](LICENSE).
+Pull request'ler memnuniyetle karşılanır! Önemli değişiklikler için lütfen önce ne değiştirmek istediğinizi tartışmak üzere bir issue açın.
+
+1. Depoyu fork'layın
+2. Dalınızı oluşturun: `git checkout -b ozellik/yeni-ozellik`
+3. Değişikliklerinizi commit'leyin: `git commit -m 'feat: yeni özellik ekle'`
+4. Push'layın: `git push origin ozellik/yeni-ozellik`
+5. Pull Request açın
 
 ---
 
-Built with Next.js, Supabase and Chakra UI
+## 📄 Lisans
+
+Bu proje açık kaynaklıdır ve [MIT Lisansı](LICENSE) kapsamında sunulmaktadır.
+
+---
+
+Next.js, Supabase ve Chakra UI ile geliştirildi
