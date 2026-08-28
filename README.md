@@ -205,17 +205,6 @@ Bu proje, bir Supabase (PostgreSQL) projesine yüklenmiş klasik **Northwind** v
 
 ---
 
-## 📜 Kullanılabilir Komutlar
-
-| Komut | Açıklama |
-|-------|----------|
-| `npm run dev` | Geliştirme sunucusunu başlatır (webpack) |
-| `npm run build` | Production derlemesi oluşturur |
-| `npm run start` | Production derlemesini sunar |
-| `npm run lint` | ESLint çalıştırır |
-
----
-
 ## 🔒 Kimlik Doğrulama Akışı
 
 ```
@@ -243,35 +232,3 @@ Kullanıcı /dashboard adresini ziyaret eder
   /dashboard adresine yönlendir
 ```
 
----
-
-## 🌐 Dağıtım
-
-En kolay dağıtım yöntemi **[Vercel](https://vercel.com)** üzerindendir:
-
-1. Deponuzu GitHub'a gönderin.
-2. Projeyi [vercel.com/new](https://vercel.com/new) adresinden içe aktarın.
-3. Vercel panosunda `.env.local` dosyasındaki tüm ortam değişkenlerini ekleyin.
-4. Dağıtın — Vercel, Next.js'i otomatik olarak algılar ve derlemeyi yapılandırır.
-
----
-
-## 🤝 Katkıda Bulunma
-
-Pull request'ler memnuniyetle karşılanır! Önemli değişiklikler için lütfen önce ne değiştirmek istediğinizi tartışmak üzere bir issue açın.
-
-1. Depoyu fork'layın
-2. Dalınızı oluşturun: `git checkout -b ozellik/yeni-ozellik`
-3. Değişikliklerinizi commit'leyin: `git commit -m 'feat: yeni özellik ekle'`
-4. Push'layın: `git push origin ozellik/yeni-ozellik`
-5. Pull Request açın
-
----
-
-## 📄 Lisans
-
-Bu proje açık kaynaklıdır ve [MIT Lisansı](LICENSE) kapsamında sunulmaktadır.
-
----
-
-Next.js, Supabase ve Chakra UI ile geliştirildi
