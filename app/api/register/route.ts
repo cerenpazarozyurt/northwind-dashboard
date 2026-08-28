@@ -1,9 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Service role key: RLS'i bypass eder, sadece server-side kullanılır
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY! //rls'i atlar
 );
 
 export async function POST(request: Request) {
@@ -11,7 +10,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password, firstName, lastName } = body;
 
-    // Gelen bilgilerde eksik var mı kontrolü
     if (!email || !password || !firstName || !lastName) {
       return Response.json({ error: "Eksik alanlar var." }, { status: 400 });
     }
@@ -21,7 +19,7 @@ export async function POST(request: Request) {
       await supabaseAdmin.auth.admin.createUser({
         email,
         password,
-        email_confirm: true, // Supabase'in kendi email onayını devre dışı bırakıyoruz
+        email_confirm: true, // Supabase'in kendi email onayını devre dışı bırak
       });
 
     if (signUpError || !authData.user) {

@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
     try {
       // Supabase'in kendi şifre sıfırlama maili tetikleyicisi
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `http://localhost:3000/update-password`, // Şifreyi güncelleyeceği sayfa
+        redirectTo: `http://localhost:3000/update-password`,
       });
 
       if (error) {

@@ -71,10 +71,11 @@ export default function Dashboard() {
   };
 
   const statCards = [
-    { label: "Toplam Ciro",          value: `$${totalRevenue.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, accentColor: "blue.400",   icon: <DollarSign size={20} />, iconColors: c.iconBlue   },
-    { label: "Toplam Sipariş Sayısı",value: totalOrders,                                                                                         accentColor: "purple.400", icon: <ShoppingCart size={20} />, iconColors: c.iconPurple },
-    { label: "Toplam Müşteri",       value: totalCustomers,                                                                                       accentColor: "green.400",  icon: <Users size={20} />,       iconColors: c.iconGreen  },
-    { label: "Aktif Ürün Sayısı",    value: totalProducts,                                                                                        accentColor: "orange.400", icon: <Package size={20} />,     iconColors: c.iconOrange },
+    { label: "Toplam Ciro",          value: `$${totalRevenue.toLocaleString("tr-TR", 
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, accentColor: "blue.400",   icon: <DollarSign size={20} />, iconColors: c.iconBlue   },
+    { label: "Toplam Sipariş Sayısı",value: totalOrders, accentColor: "purple.400", icon: <ShoppingCart size={20} />, iconColors: c.iconPurple },
+    { label: "Toplam Müşteri",       value: totalCustomers, accentColor: "green.400",  icon: <Users size={20} />,iconColors: c.iconGreen  },
+    { label: "Aktif Ürün Sayısı",    value: totalProducts, accentColor: "orange.400", icon: <Package size={20} />,iconColors: c.iconOrange },
   ];
 
   if (isLoading) {
@@ -95,7 +96,6 @@ export default function Dashboard() {
 
   return (
     <Box w="full" minW="0">
-      {/* Stat kartları */}
       <SimpleGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={5} w="full">
         {statCards.map((card) => (
           <Box
@@ -134,7 +134,6 @@ export default function Dashboard() {
         ))}
       </SimpleGrid>
 
-      {/* Yıl filtresi */}
       <Flex justify={{ base: "stretch", md: "flex-end" }} my={5} w="full">
         <Select.Root
           collection={years}
@@ -170,7 +169,6 @@ export default function Dashboard() {
         </Select.Root>
       </Flex>
 
-      {/* Grafikler */}
       <Stack direction={{ base: "column", lg: "row" }} gap={5} w="full">
         <Box flex="1" bg={c.cardBg} p={5} borderRadius="xl" border="1px solid" borderColor={c.cardBorder} boxShadow="0 10px 28px rgba(0, 0, 0, 0.12)" overflowX="auto">
           <HighchartsReact highcharts={Highcharts} options={chartOptions} />

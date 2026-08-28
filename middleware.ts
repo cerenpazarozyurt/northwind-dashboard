@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 const PROTECTED_ROUTES = ["/dashboard", "/orders", "/products", "/customers"];
-// login ve register için: giriş yapmış kullanıcıları dashboard'a yönlendir
 const LOGIN_REGISTER_ROUTES = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
@@ -41,8 +40,6 @@ export async function middleware(request: NextRequest) {
     return redirectWithSessionCookies(request, supabaseResponse, "/login");
   }
 
-  // Giriş yapmış kullanıcı login/register'a gitmeye çalışırsa dashboard'a yönlendir
-  // /verify sayfası burada yok — hem giriş yapmış hem yapmamış kullanıcılar erişebilir
   if (isLoginRegisterRoute && user) {
     return redirectWithSessionCookies(request, supabaseResponse, "/dashboard");
   }

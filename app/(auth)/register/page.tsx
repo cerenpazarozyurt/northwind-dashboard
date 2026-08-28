@@ -51,7 +51,7 @@ export default function RegisterPage() {
         return;
       }
 
-      // Yönlendirme yok — aynı sayfada "e-postanı kontrol et" ekranı göster
+      // Yönlendirme yok aynı sayfada e-postanı kontrol et ekranı göster
       setSentEmail(data.email);
       setEmailSent(true);
 
@@ -67,7 +67,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Kayıt başarılı → "E-postanı kontrol et" ekranı (aynı sekme, yönlendirme yok)
+  // Kayıt başarılı, E-postanı kontrol et ekranı
   if (emailSent) {
     return (
       <Flex minH="100vh" align="center" justify="center" bg="linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 50%, #F5F3FF 100%)" p={{ base: 4, md: 8 }}>

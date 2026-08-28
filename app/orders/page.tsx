@@ -37,7 +37,6 @@ export default function OrdersPage() {
   } = useOrderDetail(selectedOrderId);
 
   const c = useThemeColors();
-  // Inline style için gerçek hex değerleri (Chakra token string'leri inline style'da çalışmaz)
   const theadBg      = useColorModeValue("#F9FAFB", "#111827");
   const thColor      = useColorModeValue("#1F2937", "#F3F4F6");
   const thBorder     = useColorModeValue("#E5E7EB", "#1F2937");
